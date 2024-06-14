@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class Loading extends StatelessWidget {
   const Loading({super.key});
@@ -11,16 +10,15 @@ class Loading extends StatelessWidget {
       backgroundColor: Colors.black,
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Image.asset(
               "images/final.jpg",
               fit: BoxFit.cover,
+              width: 100.w,
+              height: 70.h,
             ),
-            const SizedBox(height: 20),
             Container(
-              margin: const EdgeInsets.symmetric(horizontal: 20),
+              margin: const EdgeInsets.only(top: 20),
               child: const Text(
                 "Daily Task Planner",
                 style: TextStyle(
@@ -34,9 +32,8 @@ class Loading extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
             ),
-            const SizedBox(height: 10),
             Container(
-              margin: const EdgeInsets.symmetric(horizontal: 20),
+              margin: const EdgeInsets.only(top: 10),
               child: const Text(
                 "Effortlessly Plan Your Day",
                 style: TextStyle(
@@ -47,16 +44,16 @@ class Loading extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
             ),
-            const SizedBox(height: 20),
+
             Container(
-              margin: const EdgeInsets.symmetric(horizontal: 20),
+              margin: const EdgeInsets.only(top: 20),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
                   padding:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                      const EdgeInsets.only(top: 20,left: 40,right: 40,bottom: 20)
                 ),
                 onPressed: () {},
                 child: const Text(
