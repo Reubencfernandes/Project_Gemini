@@ -15,9 +15,9 @@ class MyApp extends StatelessWidget {
     return ResponsiveSizer(builder: (context, orientation, screentype) {
       return MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: Loading(),
+        home: const Loading(),
         routes: {
-          "/home": (context) => Homestuff(),
+          "/home": (context) => const Homestuff(),
           "/create": (context) => const Create(),
           "/tasks": (context) => const Task(),
         },

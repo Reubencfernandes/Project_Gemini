@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class Loading extends StatelessWidget {
   const Loading({super.key});
@@ -44,18 +45,91 @@ class Loading extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
             ),
-
             Container(
               margin: const EdgeInsets.only(top: 20),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  padding:
-                      const EdgeInsets.only(top: 20,left: 40,right: 40,bottom: 20)
-                ),
-                onPressed: () {},
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    padding: const EdgeInsets.only(
+                        top: 20, left: 40, right: 40, bottom: 20)),
+                onPressed: () {
+                  showModalBottomSheet(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return SizedBox(
+                        child: Center(
+                          child: Container(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      padding:  EdgeInsets.all(20),
+                                      backgroundColor: Colors.white,
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                          BorderRadius.circular(12))),
+                                  onPressed: () {
+                                    Navigator.pushNamed(context, '/home');
+                                  },
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Image.asset(
+                                        'images/google.png',
+                                        height: 50,
+                                      ),
+                                      const Text(
+                                        "Sign In with Google",
+                                        style: TextStyle(
+                                          fontFamily: 'inter',
+                                          color: Colors.black,
+                                          fontSize: 21,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(height: 20),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                     padding:  EdgeInsets.all(20),
+                                      backgroundColor: Colors.white,
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                          BorderRadius.circular(12))),
+                                  onPressed: () {},
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Image.asset(
+                                        'images/Apple-Logo.png',
+                                        height: 40,
+                                      ),
+                                      const Text(
+                                        "Sign In with Apple",
+                                        style: TextStyle(
+                                          fontFamily: 'inter',
+                                          color: Colors.black,
+                                          fontSize: 21,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  );
+
+                  //Navigator.pushNamed(context, '/home');
+                },
                 child: const Text(
                   "Get Started",
                   style: TextStyle(

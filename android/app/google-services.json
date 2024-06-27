@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1042783564992",
+    "project_id": "daily-task-planner-935f5",
+    "storage_bucket": "daily-task-planner-935f5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1042783564992:android:6202ce184b79b02662e925",
+        "android_client_info": {
+          "package_name": "com.example.flute"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1042783564992-nsj4rkcbm0kc2emcj7lcdqk7uo6h7ln0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCYkWxZww-wVN6DXmRUa4Rxsi7hU3JrZ9Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1042783564992-nsj4rkcbm0kc2emcj7lcdqk7uo6h7ln0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
