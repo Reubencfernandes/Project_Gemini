@@ -1,7 +1,6 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flute/pages/Components/navigate.dart';
 import 'package:flutter/material.dart';
 import 'package:pie_chart/pie_chart.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 Map<String, double> dataMap = {
@@ -33,8 +32,7 @@ class Homestuff extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ClipRRect(
-                  borderRadius: BorderRadius.circular(
-                      50.0), // Adjust the radius as needed
+                  borderRadius: BorderRadius.circular(50.0), // Adjust the radius as needed
                   child: SizedBox(
                     width: 50.0, // Adjust the width as needed
                     height: 50.0, // Adjust the height as needed
@@ -45,15 +43,15 @@ class Homestuff extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 10),
-                const Column(
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+                  children: const [
                     Text("Hello,",
                         style: TextStyle(
-                            fontFamily: 'inter', color: Colors.black)),
+                            fontFamily: 'Inter', color: Colors.black)),
                     Text("Reuben Fernandes",
                         style: TextStyle(
-                            fontFamily: 'inter',
+                            fontFamily: 'Inter',
                             fontSize: 20,
                             fontWeight: FontWeight.bold)),
                   ],
@@ -64,9 +62,9 @@ class Homestuff extends StatelessWidget {
             Expanded(
               child: ListView(
                 children: [
-                  const Text(" Current Task",
+                  const Text("Current Task",
                       style: TextStyle(
-                          fontFamily: 'inter',
+                          fontFamily: 'Inter',
                           fontSize: 20,
                           fontWeight: FontWeight.bold)),
                   Card(
@@ -86,28 +84,28 @@ class Homestuff extends StatelessWidget {
                               "Work",
                               style: TextStyle(
                                 color: Colors.red[900],
-                                fontFamily: 'inter',
+                                fontFamily: 'Inter',
                                 fontSize: 14,
                               ),
                             ),
                           ),
                           const SizedBox(height: 5),
-                          const Text("Design an android App Using Flutter",
+                          const Text("Design an Android App Using Flutter",
                               style: TextStyle(
-                                  fontFamily: 'inter',
+                                  fontFamily: 'Inter',
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold)),
                           const SizedBox(height: 10),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text("  Progress",
+                              Text("Progress",
                                   style: TextStyle(
-                                      fontFamily: 'inter',
+                                      fontFamily: 'Inter',
                                       color: Colors.grey[600])),
                               const Text("35%",
                                   style: TextStyle(
-                                      fontFamily: 'inter',
+                                      fontFamily: 'Inter',
                                       color: Colors.black,
                                       fontWeight: FontWeight.bold)),
                             ],
@@ -118,7 +116,7 @@ class Homestuff extends StatelessWidget {
                               borderRadius: BorderRadius.circular(10.0),
                               child: LinearPercentIndicator(
                                 lineHeight: 15.0,
-                                percent: 0.8,
+                                percent: 0.35,
                                 progressColor: Colors.black,
                                 backgroundColor: Colors.grey[300],
                                 barRadius: const Radius.circular(10),
@@ -137,7 +135,7 @@ class Homestuff extends StatelessWidget {
                               Text(
                                 "Tue, 4 May 2024",
                                 style: TextStyle(
-                                    fontFamily: 'inter',
+                                    fontFamily: 'Inter',
                                     color: Colors.grey[600],
                                     fontWeight: FontWeight.w600),
                               )
@@ -148,9 +146,9 @@ class Homestuff extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 30),
-                  const Text(" Analysis of Tasks",
+                  const Text("Analysis of Tasks",
                       style: TextStyle(
-                          fontFamily: 'inter',
+                          fontFamily: 'Inter',
                           fontSize: 20,
                           fontWeight: FontWeight.bold)),
                   Card(
@@ -172,7 +170,7 @@ class Homestuff extends StatelessWidget {
                             legendShape: BoxShape.circle,
                             legendTextStyle: TextStyle(
                               fontWeight: FontWeight.w400,
-                              fontFamily: 'inter',
+                              fontFamily: 'Inter',
                             ),
                           ),
                           chartValuesOptions: const ChartValuesOptions(
@@ -182,8 +180,6 @@ class Homestuff extends StatelessWidget {
                             showChartValuesOutside: false,
                             decimalPlaces: 1,
                           ),
-                          // gradientList: ---To add gradient colors---
-                          // emptyColorGradient: ---Empty Color gradient---
                         )),
                   ),
                   const SizedBox(height: 20),
@@ -198,20 +194,20 @@ class Homestuff extends StatelessWidget {
                           const SizedBox(height: 5),
                           const Text("Progress",
                               style: TextStyle(
-                                  fontFamily: 'inter',
+                                  fontFamily: 'Inter',
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold)),
                           const SizedBox(height: 10),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text("  Time Left This Month",
+                              Text("Time Left This Month",
                                   style: TextStyle(
-                                      fontFamily: 'inter',
+                                      fontFamily: 'Inter',
                                       color: Colors.grey[600])),
                               const Text("35%",
                                   style: TextStyle(
-                                      fontFamily: 'inter',
+                                      fontFamily: 'Inter',
                                       color: Colors.black,
                                       fontWeight: FontWeight.bold)),
                             ],
@@ -222,7 +218,7 @@ class Homestuff extends StatelessWidget {
                               borderRadius: BorderRadius.circular(10.0),
                               child: LinearPercentIndicator(
                                 lineHeight: 15.0,
-                                percent: 0.8,
+                                percent: 0.35,
                                 progressColor: Colors.red[400],
                                 backgroundColor: Colors.grey[300],
                                 barRadius: const Radius.circular(10),
@@ -236,13 +232,13 @@ class Homestuff extends StatelessWidget {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text("  Time Left This Year",
+                              Text("Time Left This Year",
                                   style: TextStyle(
-                                      fontFamily: 'inter',
+                                      fontFamily: 'Inter',
                                       color: Colors.grey[600])),
                               const Text("35%",
                                   style: TextStyle(
-                                      fontFamily: 'inter',
+                                      fontFamily: 'Inter',
                                       color: Colors.black,
                                       fontWeight: FontWeight.bold)),
                             ],
@@ -253,7 +249,7 @@ class Homestuff extends StatelessWidget {
                               borderRadius: BorderRadius.circular(10.0),
                               child: LinearPercentIndicator(
                                 lineHeight: 15.0,
-                                percent: 0.8,
+                                percent: 0.35,
                                 progressColor: Colors.blue[400],
                                 backgroundColor: Colors.grey[300],
                                 barRadius: const Radius.circular(10),
@@ -276,6 +272,7 @@ class Homestuff extends StatelessWidget {
           ],
         ),
       ),
+      bottomNavigationBar: lastpart(), // Ensure the navigation bar is imported and used correctly
     );
   }
 }
