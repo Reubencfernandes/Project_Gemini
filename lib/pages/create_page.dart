@@ -1,31 +1,71 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'Components/navigate.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:flute/pages/Components/Taskcard.dart';
 
-class Create extends StatelessWidget {
+class Create extends StatefulWidget {
   const Create({super.key});
 
   @override
+  _CreateState createState() => _CreateState();
+}
+
+class _CreateState extends State<Create> {
+  late DateTime lastDate;
+  late String formattedMonth;
+  final model = GenerativeModel(model: 'gemini-1.5-flash', apiKey: 'AIzaSyAzwL_9gB9jeWZEn13l88MjhySTEj4Pa8M');
+  DateTime now = DateTime.now().toUtc();
+  DateTime selectedDate = DateTime.now().toUtc();
+  TextEditingController description = TextEditingController();
+  List<dynamic> tasksForToday = [];
+
+
+  @override
+  void initState() {
+    super.initState();
+    lastDate = DateTime(now.year, now.month + 1, now.day);
+    formattedMonth = DateFormat('MMMM dd, yyyy').format(selectedDate);
+    description.text ='';
+  }
+
+  List<Widget> buildCards(int count) {
+    List<Widget> cards = [];
+    for (int i = 0; i < count; i++) {
+      cards.add(
+        const TaskCard(
+          title: "Rise and Shine",
+          description:
+          "Wake up, get ready, eat a healthy breakfast to fuel your brain for a day of learning!",
+          time: "7:00 AM",
+        ),
+      );
+    }
+    return cards;
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDate,
+      firstDate: now,
+      lastDate: lastDate,
+    );
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+        formattedMonth = DateFormat('MMMM dd, yyyy').format(selectedDate);
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    List<Widget> buildCards(int count) {
-      List<Widget> cards = [];
-      for (int i = 0; i < count; i++) {
-        cards.add(
-          const TaskCard(
-            title: "Rise and Shine",
-            description: "Wake up, get ready, eat a healthy breakfast to fuel your brain for a day of learning!",
-            time: "7:00 AM",
-          ),
-        );
-      }
-      return cards;
-    };
     return Scaffold(
       backgroundColor: Colors.grey[300],
       body: Container(
-        margin: EdgeInsets.only(top: 50, left: 10, right: 10),
+        margin: const EdgeInsets.only(top: 50, left: 10, right: 10),
         child: Column(
           children: [
             Row(
@@ -34,13 +74,13 @@ class Create extends StatelessWidget {
               children: [
                 ElevatedButton(
                   onPressed: () {},
-                  child: Text("Cancel", style: TextStyle(color: Colors.red)),
+                  child: const Text("Cancel", style: TextStyle(color: Colors.red)),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.grey[300],
                     shadowColor: Colors.transparent,
                   ),
                 ),
-                Text(
+                const Text(
                   "New Task",
                   style: TextStyle(
                     fontSize: 20,
@@ -54,7 +94,7 @@ class Create extends StatelessWidget {
                     backgroundColor: Colors.grey[300],
                     shadowColor: Colors.transparent,
                   ),
-                  child: Text(
+                  child: const Text(
                     "Done",
                     style: TextStyle(color: Colors.blue),
                   ),
@@ -65,59 +105,87 @@ class Create extends StatelessWidget {
               child: ListView(
                 children: [
                   Padding(
-                    padding: EdgeInsets.all(20),
+                    padding: const EdgeInsets.all(20),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          "Description",
+                        const Text(
+                          "Enter Description Of Your Day",
                           style: TextStyle(
                             fontFamily: 'Inter',
                           ),
                         ),
-                        SizedBox(height: 20),
+                        const SizedBox(height: 10),
                         TextField(
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(),
-                            floatingLabelBehavior: FloatingLabelBehavior.always,
-                            labelText: 'Enter Task Description',
+                          controller: description,
+                          decoration: const InputDecoration(
+                            fillColor: Colors.white,
+                            border: InputBorder.none,
+                            filled: true,
+                            hintText:
+                            'I wake up at 6:30 AM, go for a jog, have breakfast at 7:30 AM, attend online classes from 8:30 AM to 12:30 PM, and spend the afternoon working on projects.',
                           ),
-                          maxLines: 6,
+                          maxLines: 8,
                         ),
-                        SizedBox(height: 20),
-                        Text(
+                        const SizedBox(height: 20),
+                        const Text(
                           "Date",
                           style: TextStyle(
                             fontFamily: 'Inter',
                           ),
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         Row(
                           children: [
                             Expanded(
                               child: TextField(
+                                onTap: () => _selectDate(context),
+                                readOnly: true,
                                 decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  labelText: 'Enter Date',
+                                  fillColor: Colors.white,
+                                  filled: true,
+                                  border: InputBorder.none,
+                                  hintText: formattedMonth,
                                 ),
                               ),
                             ),
-                            SizedBox(width: 10),
+                            const SizedBox(width: 10),
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
+                                padding: const EdgeInsets.only(
+                                    left: 15, right: 15, top: 10, bottom: 10),
                                 backgroundColor: Colors.red,
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius:
+                                  BorderRadius.all(Radius.circular(8)),
+                                ),
                               ),
-                              onPressed: () {},
-                              child: Text("Generate",style:
-                              TextStyle(color: Colors.white,
-                                fontFamily: 'Bebas Neue',
-                                fontSize: 20,
-                              ),),
+                              onPressed: () async {
+                                String textDescription = description.text;
+                                final content = [Content.text('create schedule for me for my day give output in json format in an array with title,description,time and category (sports,education,work,hobbies) $textDescription')];
+                                final response =  await model.generateContent(content);
+                                String? jsonResponseText = response.text;
+                                print(jsonResponseText);
+
+                                jsonResponseText = jsonResponseText?.substring(7, jsonResponseText.length - 4);
+
+                                List<dynamic> jsonData = await json.decode(jsonResponseText!);
+                                print(jsonData);
+
+                              },
+                              child: const Text(
+                                "Generate",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontFamily: 'Bebas Neue',
+                                  fontSize: 20,
+                                ),
+                              ),
                             ),
                           ],
                         ),
-                        SizedBox(height: 40,),
-                        Row(
+                        const SizedBox(height: 40),
+                        const Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
@@ -129,7 +197,7 @@ class Create extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              "6 Tasks",
+                              "0 Tasks",
                               style: TextStyle(
                                 color: Colors.blue,
                                 fontFamily: 'Inter',
@@ -139,10 +207,8 @@ class Create extends StatelessWidget {
                             ),
                           ],
                         ),
-                      ...buildCards(6),
+                        ...buildCards(0),
                       ],
-
-
                     ),
                   ),
                 ],
@@ -151,7 +217,7 @@ class Create extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: lastpart(),
+      bottomNavigationBar: const lastpart(),
     );
   }
 }
