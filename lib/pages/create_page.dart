@@ -75,14 +75,14 @@ class Create extends StatelessWidget {
                             fontFamily: 'Inter',
                           ),
                         ),
-                        SizedBox(height: 10),
+                        SizedBox(height: 20),
                         TextField(
                           decoration: InputDecoration(
                             border: OutlineInputBorder(),
+                            floatingLabelBehavior: FloatingLabelBehavior.always,
                             labelText: 'Enter Task Description',
-                            contentPadding: EdgeInsets.symmetric(vertical: 20),
                           ),
-                          maxLines: 5,
+                          maxLines: 6,
                         ),
                         SizedBox(height: 20),
                         Text(
