@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 
 class Loading extends StatelessWidget {
   const Loading({super.key});

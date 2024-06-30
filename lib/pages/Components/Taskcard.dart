@@ -4,12 +4,14 @@ class TaskCard extends StatelessWidget {
   final String title;
   final String description;
   final String time;
+  final String Category;
 
   const TaskCard({
     Key? key,
     required this.title,
     required this.description,
     required this.time,
+    required this.Category,
   }) : super(key: key);
 
   @override
@@ -28,7 +30,7 @@ class TaskCard extends StatelessWidget {
                 backgroundColor: Colors.pink[100],
               ),
               child: Text(
-                "Work",
+                Category,
                 style: TextStyle(
                   color: Colors.red[900],
                   fontFamily: 'Inter',

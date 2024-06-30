@@ -20,25 +20,25 @@ class _CreateState extends State<Create> {
   DateTime selectedDate = DateTime.now().toUtc();
   TextEditingController description = TextEditingController();
   List<dynamic> tasksForToday = [];
-
+  int count = 0;
 
   @override
   void initState() {
     super.initState();
     lastDate = DateTime(now.year, now.month + 1, now.day);
     formattedMonth = DateFormat('MMMM dd, yyyy').format(selectedDate);
-    description.text ='';
+    description.text = '';
   }
 
-  List<Widget> buildCards(int count) {
+  List<Widget> buildCards() {
     List<Widget> cards = [];
-    for (int i = 0; i < count; i++) {
+    for (var task in tasksForToday) {
       cards.add(
-        const TaskCard(
-          title: "Rise and Shine",
-          description:
-          "Wake up, get ready, eat a healthy breakfast to fuel your brain for a day of learning!",
-          time: "7:00 AM",
+        TaskCard(
+          title: task['title'],
+          description: task['description'],
+          time: task['time'],
+          Category: task['category'],
         ),
       );
     }
@@ -58,6 +58,13 @@ class _CreateState extends State<Create> {
         formattedMonth = DateFormat('MMMM dd, yyyy').format(selectedDate);
       });
     }
+  }
+
+  void setCards(int c, List<dynamic> cdata) {
+    setState(() {
+      count = c;
+      tasksForToday = cdata;
+    });
   }
 
   @override
@@ -162,16 +169,17 @@ class _CreateState extends State<Create> {
                               ),
                               onPressed: () async {
                                 String textDescription = description.text;
-                                final content = [Content.text('create schedule for me for my day give output in json format in an array with title,description,time and category (sports,education,work,hobbies) $textDescription')];
-                                final response =  await model.generateContent(content);
+                                final content = [
+                                  Content.text(
+                                      'create schedule for me for my day give output in json format in an array with title,description,time and category (sports,education,work,hobbies) $textDescription')
+                                ];
+                                final response = await model.generateContent(content);
                                 String? jsonResponseText = response.text;
                                 print(jsonResponseText);
-
-                                jsonResponseText = jsonResponseText?.substring(7, jsonResponseText.length - 4);
-
+                                jsonResponseText = jsonResponseText?.substring(7, jsonResponseText.length - 5);
                                 List<dynamic> jsonData = await json.decode(jsonResponseText!);
                                 print(jsonData);
-
+                                setCards(jsonData.length, jsonData);
                               },
                               child: const Text(
                                 "Generate",
@@ -185,10 +193,10 @@ class _CreateState extends State<Create> {
                           ],
                         ),
                         const SizedBox(height: 40),
-                        const Row(
+                        Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
+                            const Text(
                               "Plans For Today",
                               style: TextStyle(
                                 fontFamily: 'Inter',
@@ -197,8 +205,8 @@ class _CreateState extends State<Create> {
                               ),
                             ),
                             Text(
-                              "0 Tasks",
-                              style: TextStyle(
+                              '$count Tasks',
+                              style: const TextStyle(
                                 color: Colors.blue,
                                 fontFamily: 'Inter',
                                 fontSize: 14,
@@ -207,7 +215,7 @@ class _CreateState extends State<Create> {
                             ),
                           ],
                         ),
-                        ...buildCards(0),
+                        ...buildCards(),
                       ],
                     ),
                   ),

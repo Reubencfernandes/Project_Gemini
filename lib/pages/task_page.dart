@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:flute/pages/Components/Taskcard.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:flute/pages/Components/navigate.dart';
 
 class Task extends StatelessWidget {
@@ -17,6 +16,7 @@ class Task extends StatelessWidget {
       for (int i = 0; i < count; i++) {
         cards.add(
           const TaskCard(
+            Category: "Work",
             title: "Rise and Shine",
             description: "Wake up, get ready, eat a healthy breakfast to fuel your brain for a day of learning!",
             time: "7:00 AM",
