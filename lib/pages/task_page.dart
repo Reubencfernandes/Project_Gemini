@@ -16,7 +16,6 @@ class Task extends StatelessWidget {
       for (int i = 0; i < count; i++) {
         cards.add(
           const TaskCard(
-            Category: "Work",
             title: "Rise and Shine",
             description: "Wake up, get ready, eat a healthy breakfast to fuel your brain for a day of learning!",
             time: "7:00 AM",
@@ -24,7 +23,7 @@ class Task extends StatelessWidget {
         );
       }
       return cards;
-    };
+    }
     return Scaffold(
       backgroundColor: Colors.grey[300],
       body: Container(
@@ -101,7 +100,7 @@ class Task extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: lastpart(),
+      bottomNavigationBar: const lastpart(),
     );
   }
 }

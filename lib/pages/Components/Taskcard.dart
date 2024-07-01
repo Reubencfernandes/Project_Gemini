@@ -4,15 +4,13 @@ class TaskCard extends StatelessWidget {
   final String title;
   final String description;
   final String time;
-  final String Category;
 
   const TaskCard({
-    Key? key,
+    super.key,
     required this.title,
     required this.description,
     required this.time,
-    required this.Category,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +28,7 @@ class TaskCard extends StatelessWidget {
                 backgroundColor: Colors.pink[100],
               ),
               child: Text(
-                Category,
+                "Work",
                 style: TextStyle(
                   color: Colors.red[900],
                   fontFamily: 'Inter',
@@ -41,7 +39,7 @@ class TaskCard extends StatelessWidget {
             const SizedBox(height: 5),
             Text(
               title,
-              style: TextStyle(
+              style: const TextStyle(
                 fontFamily: 'Inter',
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -50,7 +48,7 @@ class TaskCard extends StatelessWidget {
             const SizedBox(height: 10),
             Text(
               description,
-              style: TextStyle(
+              style: const TextStyle(
                 fontFamily: 'Inter',
                 color: Colors.black,
                 fontSize: 14,

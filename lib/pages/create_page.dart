@@ -1,9 +1,11 @@
 import 'dart:convert';
-import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'Components/navigate.dart';
-import 'package:google_generative_ai/google_generative_ai.dart';
+
 import 'package:flute/pages/Components/Taskcard.dart';
+import 'package:flutter/material.dart';
+import 'package:google_generative_ai/google_generative_ai.dart';
+import 'package:intl/intl.dart';
+
+import 'Components/navigate.dart';
 
 class Create extends StatefulWidget {
   const Create({super.key});
@@ -15,12 +17,13 @@ class Create extends StatefulWidget {
 class _CreateState extends State<Create> {
   late DateTime lastDate;
   late String formattedMonth;
-  final model = GenerativeModel(model: 'gemini-1.5-flash', apiKey: 'AIzaSyAzwL_9gB9jeWZEn13l88MjhySTEj4Pa8M');
+  final model = GenerativeModel(
+      model: 'gemini-1.5-flash',
+      apiKey: 'AIzaSyAzwL_9gB9jeWZEn13l88MjhySTEj4Pa8M');
   DateTime now = DateTime.now().toUtc();
   DateTime selectedDate = DateTime.now().toUtc();
   TextEditingController description = TextEditingController();
   List<dynamic> tasksForToday = [];
-  int count = 0;
 
   @override
   void initState() {
@@ -30,15 +33,15 @@ class _CreateState extends State<Create> {
     description.text = '';
   }
 
-  List<Widget> buildCards() {
+  List<Widget> buildCards(int count) {
     List<Widget> cards = [];
-    for (var task in tasksForToday) {
+    for (int i = 0; i < count; i++) {
       cards.add(
-        TaskCard(
-          title: task['title'],
-          description: task['description'],
-          time: task['time'],
-          Category: task['category'],
+        const TaskCard(
+          title: "Rise and Shine",
+          description:
+              "Wake up, get ready, eat a healthy breakfast to fuel your brain for a day of learning!",
+          time: "7:00 AM",
         ),
       );
     }
@@ -60,13 +63,6 @@ class _CreateState extends State<Create> {
     }
   }
 
-  void setCards(int c, List<dynamic> cdata) {
-    setState(() {
-      count = c;
-      tasksForToday = cdata;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -81,11 +77,12 @@ class _CreateState extends State<Create> {
               children: [
                 ElevatedButton(
                   onPressed: () {},
-                  child: const Text("Cancel", style: TextStyle(color: Colors.red)),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.grey[300],
                     shadowColor: Colors.transparent,
                   ),
+                  child:
+                      const Text("Cancel", style: TextStyle(color: Colors.red)),
                 ),
                 const Text(
                   "New Task",
@@ -130,7 +127,7 @@ class _CreateState extends State<Create> {
                             border: InputBorder.none,
                             filled: true,
                             hintText:
-                            'I wake up at 6:30 AM, go for a jog, have breakfast at 7:30 AM, attend online classes from 8:30 AM to 12:30 PM, and spend the afternoon working on projects.',
+                                'I wake up at 6:30 AM, go for a jog, have breakfast at 7:30 AM, attend online classes from 8:30 AM to 12:30 PM, and spend the afternoon working on projects.',
                           ),
                           maxLines: 8,
                         ),
@@ -164,22 +161,27 @@ class _CreateState extends State<Create> {
                                 backgroundColor: Colors.red,
                                 shape: const RoundedRectangleBorder(
                                   borderRadius:
-                                  BorderRadius.all(Radius.circular(8)),
+                                      BorderRadius.all(Radius.circular(8)),
                                 ),
                               ),
                               onPressed: () async {
-                                String textDescription = description.text;
+                                String textDescription =
+                                    'I wake up at 6:30 AM, go for a jog, have breakfast at 7:30 AM, attend online classes from 8:30 AM to 12:30 PM, and spend the afternoon working on projects.';
                                 final content = [
                                   Content.text(
-                                      'create schedule for me for my day give output in json format in an array with title,description,time and category (sports,education,work,hobbies) $textDescription')
+                                      'create schedule for me for my day give output in plain JSON format as an array with title,description,startTimeISO,endTimeISO and category (sports,education,work,hobbies). Do not output markdown. $textDescription')
                                 ];
-                                final response = await model.generateContent(content);
+                                final response =
+                                    await model.generateContent(content);
                                 String? jsonResponseText = response.text;
                                 print(jsonResponseText);
-                                jsonResponseText = jsonResponseText?.substring(7, jsonResponseText.length - 5);
-                                List<dynamic> jsonData = await json.decode(jsonResponseText!);
+
+                                jsonResponseText = jsonResponseText?.substring(
+                                    7, jsonResponseText.length - 4);
+
+                                List<dynamic> jsonData =
+                                    await json.decode(jsonResponseText!);
                                 print(jsonData);
-                                setCards(jsonData.length, jsonData);
                               },
                               child: const Text(
                                 "Generate",
@@ -193,10 +195,10 @@ class _CreateState extends State<Create> {
                           ],
                         ),
                         const SizedBox(height: 40),
-                        Row(
+                        const Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text(
+                            Text(
                               "Plans For Today",
                               style: TextStyle(
                                 fontFamily: 'Inter',
@@ -205,8 +207,8 @@ class _CreateState extends State<Create> {
                               ),
                             ),
                             Text(
-                              '$count Tasks',
-                              style: const TextStyle(
+                              "0 Tasks",
+                              style: TextStyle(
                                 color: Colors.blue,
                                 fontFamily: 'Inter',
                                 fontSize: 14,
@@ -215,7 +217,7 @@ class _CreateState extends State<Create> {
                             ),
                           ],
                         ),
-                        ...buildCards(),
+                        ...buildCards(0),
                       ],
                     ),
                   ),

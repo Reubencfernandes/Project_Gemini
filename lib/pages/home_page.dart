@@ -1,7 +1,7 @@
 import 'package:flute/pages/Components/navigate.dart';
 import 'package:flutter/material.dart';
-import 'package:pie_chart/pie_chart.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:pie_chart/pie_chart.dart';
 
 Map<String, double> dataMap = {
   "Study": 5,
@@ -16,8 +16,8 @@ List<Color> colorList = [
   Colors.red,
 ];
 
-class Homestuff extends StatelessWidget {
-  const Homestuff({super.key});
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -28,36 +28,7 @@ class Homestuff extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(50.0), // Adjust the radius as needed
-                  child: SizedBox(
-                    width: 50.0, // Adjust the width as needed
-                    height: 50.0, // Adjust the height as needed
-                    child: Image.asset(
-                      "images/final.jpg",
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    Text("Hello,",
-                        style: TextStyle(
-                            fontFamily: 'Inter', color: Colors.black)),
-                    Text("Reuben Fernandes",
-                        style: TextStyle(
-                            fontFamily: 'Inter',
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold)),
-                  ],
-                ),
-              ],
-            ),
+            const WelcomeHeader(),
             const SizedBox(height: 20),
             Expanded(
               child: ListView(
@@ -272,7 +243,48 @@ class Homestuff extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: lastpart(), // Ensure the navigation bar is imported and used correctly
+      bottomNavigationBar:
+          const lastpart(), // Ensure the navigation bar is imported and used correctly
+    );
+  }
+}
+
+class WelcomeHeader extends StatelessWidget {
+  const WelcomeHeader({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ClipRRect(
+          borderRadius:
+              BorderRadius.circular(50.0), // Adjust the radius as needed
+          child: SizedBox(
+            width: 50.0, // Adjust the width as needed
+            height: 50.0, // Adjust the height as needed
+            child: Image.asset(
+              "images/final.jpg",
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+        const SizedBox(width: 10),
+        const Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("Hello,",
+                style: TextStyle(fontFamily: 'Inter', color: Colors.black)),
+            Text("Reuben Fernandes",
+                style: TextStyle(
+                    fontFamily: 'Inter',
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold)),
+          ],
+        ),
+      ],
     );
   }
 }
