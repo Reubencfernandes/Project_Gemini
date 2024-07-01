@@ -54,80 +54,7 @@ class Loading extends StatelessWidget {
                     padding: const EdgeInsets.only(
                         top: 20, left: 40, right: 40, bottom: 20)),
                 onPressed: () {
-                  showModalBottomSheet(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return SizedBox(
-                        child: Center(
-                          child: Container(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                      padding:  EdgeInsets.all(20),
-                                      backgroundColor: Colors.white,
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                          BorderRadius.circular(12))),
-                                  onPressed: () {
-                                    Navigator.pushNamed(context, '/home');
-                                  },
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Image.asset(
-                                        'images/google.png',
-                                        height: 50,
-                                      ),
-                                      const Text(
-                                        "Sign In with Google",
-                                        style: TextStyle(
-                                          fontFamily: 'inter',
-                                          color: Colors.black,
-                                          fontSize: 21,
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(height: 20),
-                                ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                     padding:  EdgeInsets.all(20),
-                                      backgroundColor: Colors.white,
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                          BorderRadius.circular(12))),
-                                  onPressed: () {},
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Image.asset(
-                                        'images/Apple-Logo.png',
-                                        height: 40,
-                                      ),
-                                      const Text(
-                                        "Sign In with Apple",
-                                        style: TextStyle(
-                                          fontFamily: 'inter',
-                                          color: Colors.black,
-                                          fontSize: 21,
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  );
-
-                  //Navigator.pushNamed(context, '/home');
+                  showLoginModal(context);
                 },
                 child: const Text(
                   "Get Started",
@@ -145,6 +72,79 @@ class Loading extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  void showLoginModal(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return SizedBox(
+          child: Center(
+            child: Container(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.all(20),
+                        backgroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12))),
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/home');
+                    },
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Image.asset(
+                          'images/google.png',
+                          height: 50,
+                        ),
+                        const Text(
+                          "Sign In with Google",
+                          style: TextStyle(
+                            fontFamily: 'inter',
+                            color: Colors.black,
+                            fontSize: 21,
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.all(20),
+                        backgroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12))),
+                    onPressed: () {},
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Image.asset(
+                          'images/Apple-Logo.png',
+                          height: 40,
+                        ),
+                        const Text(
+                          "Sign In with Apple",
+                          style: TextStyle(
+                            fontFamily: 'inter',
+                            color: Colors.black,
+                            fontSize: 21,
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }
