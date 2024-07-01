@@ -1,20 +1,20 @@
 import 'dart:convert';
 
-import 'package:flute/pages/Components/Taskcard.dart';
+import 'package:ayumi/pages/Components/Taskcard.dart';
 import 'package:flutter/material.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:intl/intl.dart';
 
 import 'Components/navigate.dart';
 
-class Create extends StatefulWidget {
-  const Create({super.key});
+class CreateTaskPage extends StatefulWidget {
+  const CreateTaskPage({super.key});
 
   @override
-  _CreateState createState() => _CreateState();
+  _CreateTaskPageState createState() => _CreateTaskPageState();
 }
 
-class _CreateState extends State<Create> {
+class _CreateTaskPageState extends State<CreateTaskPage> {
   late DateTime lastDate;
   late String formattedMonth;
   final model = GenerativeModel(

@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "1042783564992",
+    "project_id": "daily-task-planner-935f5",
+    "storage_bucket": "daily-task-planner-935f5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1042783564992:android:a472e86e1ce605ed62e925",
+        "android_client_info": {
+          "package_name": "com.example.ayumi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1042783564992-fge9jg25q55ohig1laa69rg0d64cldqf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.ayumi",
+            "certificate_hash": "77c04b8d57280546c8230199e4e9967bc0931da4"
+          }
+        },
+        {
+          "client_id": "1042783564992-nsj4rkcbm0kc2emcj7lcdqk7uo6h7ln0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCYkWxZww-wVN6DXmRUa4Rxsi7hU3JrZ9Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1042783564992-nsj4rkcbm0kc2emcj7lcdqk7uo6h7ln0.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1042783564992-976bgr6bo6vrc9dtbumuj0793sbpj6hu.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.hackathon.gemini.app.geminiHackathonApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

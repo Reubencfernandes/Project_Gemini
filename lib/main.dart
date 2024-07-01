@@ -1,12 +1,28 @@
-import 'package:flute/pages/create_page.dart';
-import 'package:flute/pages/loading.dart';
-import 'package:flute/pages/task_page.dart';
+import 'package:ayumi/firebase_options.dart';
+import 'package:ayumi/pages/create_page.dart';
+import 'package:ayumi/pages/onboarding_page.dart';
+import 'package:ayumi/pages/task_page.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'pages/home_page.dart';
 
-void main() => runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  runApp(const MyApp());
+
+  // runApp(MultiProvider(
+  //   providers: [
+  //     ChangeNotifierProvider(create: (context) => AuthService()),
+  //   ],
+  //   child: const MyApp(),
+  // ));
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -17,11 +33,11 @@ class MyApp extends StatelessWidget {
       return MaterialApp(
         title: "Project Gemini",
         debugShowCheckedModeBanner: false,
-        home: const Loading(),
+        home: const OnboardingPage(),
         routes: {
           "/home": (context) => const HomePage(),
-          "/create": (context) => const Create(),
-          "/tasks": (context) => const Task(),
+          "/create": (context) => const CreateTaskPage(),
+          "/tasks": (context) => const TaskPage(),
         },
       );
     });

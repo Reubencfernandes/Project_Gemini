@@ -1,10 +1,10 @@
+import 'package:ayumi/pages/Components/Taskcard.dart';
+import 'package:ayumi/pages/Components/navigate.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:flute/pages/Components/Taskcard.dart';
-import 'package:flute/pages/Components/navigate.dart';
 
-class Task extends StatelessWidget {
-  const Task({super.key});
+class TaskPage extends StatelessWidget {
+  const TaskPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -17,13 +17,15 @@ class Task extends StatelessWidget {
         cards.add(
           const TaskCard(
             title: "Rise and Shine",
-            description: "Wake up, get ready, eat a healthy breakfast to fuel your brain for a day of learning!",
+            description:
+                "Wake up, get ready, eat a healthy breakfast to fuel your brain for a day of learning!",
             time: "7:00 AM",
           ),
         );
       }
       return cards;
     }
+
     return Scaffold(
       backgroundColor: Colors.grey[300],
       body: Container(
@@ -93,7 +95,7 @@ class Task extends StatelessWidget {
                       ),
                     ],
                   ),
-                ...buildCards(6),
+                  ...buildCards(6),
                 ],
               ),
             ),
