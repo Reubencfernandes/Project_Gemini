@@ -1,22 +1,14 @@
 import 'package:ayumi/Services/auth_service.dart';
 import 'package:ayumi/entities/my_user.dart';
-import 'package:ayumi/pages/Components/navigate.dart';
+import 'package:ayumi/entities/task.dart';
+import 'package:ayumi/pages/components/bottom_tab_navigation.dart';
+import 'package:ayumi/pages/components/my_badge.dart';
+import 'package:ayumi/services/database_service.dart';
+import 'package:color_hash/color_hash.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:pie_chart/pie_chart.dart';
-
-Map<String, double> dataMap = {
-  "Study": 5,
-  "Work": 3,
-  "Sleep": 2,
-  "Hobbies": 2,
-};
-List<Color> colorList = [
-  Colors.blue,
-  Colors.green,
-  Colors.yellow,
-  Colors.red,
-];
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -31,222 +23,279 @@ class HomePage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const WelcomeHeader(),
-            const SizedBox(height: 20),
             Expanded(
-              child: ListView(
-                children: [
-                  const Text("Current Task",
-                      style: TextStyle(
-                          fontFamily: 'Inter',
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold)),
-                  Card(
-                    margin: const EdgeInsets.only(left: 5, right: 5, top: 10),
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                          top: 15, bottom: 30, left: 12, right: 12),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ElevatedButton(
-                            onPressed: () {}, // Non-null callback
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.pink[100],
-                            ),
-                            child: Text(
-                              "Work",
-                              style: TextStyle(
-                                color: Colors.red[900],
-                                fontFamily: 'Inter',
-                                fontSize: 14,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 5),
-                          const Text("Design an Android App Using Flutter",
-                              style: TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold)),
-                          const SizedBox(height: 10),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text("Progress",
-                                  style: TextStyle(
-                                      fontFamily: 'Inter',
-                                      color: Colors.grey[600])),
-                              const Text("35%",
-                                  style: TextStyle(
-                                      fontFamily: 'Inter',
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold)),
-                            ],
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 5),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(10.0),
-                              child: LinearPercentIndicator(
-                                lineHeight: 15.0,
-                                percent: 0.35,
-                                progressColor: Colors.black,
-                                backgroundColor: Colors.grey[300],
-                                barRadius: const Radius.circular(10),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 15,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              const Icon(Icons.calendar_month,
-                                  color: Colors.grey),
-                              Text(
-                                "Tue, 4 May 2024",
-                                style: TextStyle(
-                                    fontFamily: 'Inter',
-                                    color: Colors.grey[600],
-                                    fontWeight: FontWeight.w600),
-                              )
-                            ],
-                          )
-                        ],
-                      ),
+              child: Builder(builder: (context) {
+                return ListView(
+                  children: [
+                    ...buildCurrentTask(),
+                    const SizedBox(height: 30),
+                    ...buildAnalysisOfTasks(),
+                    const SizedBox(height: 20),
+                    buildProgressCard(),
+                    const SizedBox(
+                      height: 10,
                     ),
-                  ),
-                  const SizedBox(height: 30),
-                  const Text("Analysis of Tasks",
-                      style: TextStyle(
-                          fontFamily: 'Inter',
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold)),
-                  Card(
-                    margin: const EdgeInsets.only(left: 5, right: 5, top: 10),
-                    child: Padding(
-                        padding: const EdgeInsets.only(
-                            top: 15, bottom: 30, left: 12, right: 12),
-                        child: PieChart(
-                          dataMap: dataMap,
-                          animationDuration: const Duration(milliseconds: 800),
-                          colorList: colorList,
-                          initialAngleInDegree: 0,
-                          chartType: ChartType.disc,
-                          ringStrokeWidth: 32,
-                          legendOptions: const LegendOptions(
-                            showLegendsInRow: false,
-                            legendPosition: LegendPosition.right,
-                            showLegends: true,
-                            legendShape: BoxShape.circle,
-                            legendTextStyle: TextStyle(
-                              fontWeight: FontWeight.w400,
-                              fontFamily: 'Inter',
-                            ),
-                          ),
-                          chartValuesOptions: const ChartValuesOptions(
-                            showChartValueBackground: true,
-                            showChartValues: true,
-                            showChartValuesInPercentage: true,
-                            showChartValuesOutside: false,
-                            decimalPlaces: 1,
-                          ),
-                        )),
-                  ),
-                  const SizedBox(height: 20),
-                  Card(
-                    margin: const EdgeInsets.only(left: 5, right: 5, top: 10),
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                          top: 15, bottom: 30, left: 12, right: 12),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const SizedBox(height: 5),
-                          const Text("Progress",
-                              style: TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold)),
-                          const SizedBox(height: 10),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text("Time Left This Month",
-                                  style: TextStyle(
-                                      fontFamily: 'Inter',
-                                      color: Colors.grey[600])),
-                              const Text("35%",
-                                  style: TextStyle(
-                                      fontFamily: 'Inter',
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold)),
-                            ],
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 5),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(10.0),
-                              child: LinearPercentIndicator(
-                                lineHeight: 15.0,
-                                percent: 0.35,
-                                progressColor: Colors.red[400],
-                                backgroundColor: Colors.grey[300],
-                                barRadius: const Radius.circular(10),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 15,
-                          ),
-                          const SizedBox(height: 10),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text("Time Left This Year",
-                                  style: TextStyle(
-                                      fontFamily: 'Inter',
-                                      color: Colors.grey[600])),
-                              const Text("35%",
-                                  style: TextStyle(
-                                      fontFamily: 'Inter',
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold)),
-                            ],
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 5),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(10.0),
-                              child: LinearPercentIndicator(
-                                lineHeight: 15.0,
-                                percent: 0.35,
-                                progressColor: Colors.blue[400],
-                                backgroundColor: Colors.grey[300],
-                                barRadius: const Radius.circular(10),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 15,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                ],
-              ),
+                  ],
+                );
+              }),
             ),
           ],
         ),
       ),
       bottomNavigationBar:
-          const lastpart(), // Ensure the navigation bar is imported and used correctly
+          const BottomTabNavigation(), // Ensure the navigation bar is imported and used correctly
+    );
+  }
+
+  List<Widget> buildCurrentTask() {
+    Task? currentTask = DatabaseService().getCurrentTask();
+
+    double progressPercent = 0.0;
+    if (currentTask != null) {
+      progressPercent = 100 *
+          (DateTime.now().millisecondsSinceEpoch -
+              currentTask.startTime.millisecondsSinceEpoch) /
+          (currentTask.endTime.millisecondsSinceEpoch -
+              currentTask.startTime.millisecondsSinceEpoch);
+    }
+
+    return [
+      const Text("Current Task",
+          style: TextStyle(
+              fontFamily: 'Inter', fontSize: 20, fontWeight: FontWeight.bold)),
+      currentTask == null
+          ? const Text("No task right now.",
+              style: TextStyle(
+                fontFamily: 'Inter',
+                fontSize: 14,
+              ))
+          : Card(
+              margin: const EdgeInsets.only(left: 5, right: 5, top: 10),
+              child: Padding(
+                padding: const EdgeInsets.only(
+                    top: 15, bottom: 30, left: 12, right: 12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    MyBadge(text: currentTask.category),
+                    const SizedBox(height: 5),
+                    Text(currentTask.title,
+                        style: const TextStyle(
+                            fontFamily: 'Inter',
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("Progress",
+                            style: TextStyle(
+                                fontFamily: 'Inter', color: Colors.grey[600])),
+                        Text("${progressPercent.toStringAsFixed(0)}%",
+                            style: const TextStyle(
+                                fontFamily: 'Inter',
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold)),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 5),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10.0),
+                        child: LinearPercentIndicator(
+                          lineHeight: 15.0,
+                          percent: progressPercent / 100,
+                          progressColor: Colors.black,
+                          backgroundColor: Colors.grey[300],
+                          barRadius: const Radius.circular(10),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        const Icon(Icons.calendar_month, color: Colors.grey),
+                        Text(
+                          DateFormat('E, d MMM yyyy')
+                              .format(currentTask.endTime),
+                          style: TextStyle(
+                              fontFamily: 'Inter',
+                              color: Colors.grey[600],
+                              fontWeight: FontWeight.w600),
+                        )
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ),
+    ];
+  }
+
+  List<Widget> buildAnalysisOfTasks() {
+    List<Task> tasks = DatabaseService().tasks;
+    // create dataMap from the tasks.category
+
+    Map<String, double> dataMap = {};
+    List<Color> colorList = [];
+    for (var task in tasks) {
+      if (dataMap.containsKey(task.category)) {
+        dataMap[task.category] = dataMap[task.category]! + 1;
+      } else {
+        colorList.add(ColorHash(task.category).toColor());
+        dataMap[task.category] = 1;
+      }
+    }
+
+    return [
+      const Text("Analysis of Tasks",
+          style: TextStyle(
+              fontFamily: 'Inter', fontSize: 20, fontWeight: FontWeight.bold)),
+      Card(
+        margin: const EdgeInsets.only(left: 5, right: 5, top: 10),
+        child: Padding(
+            padding:
+                const EdgeInsets.only(top: 15, bottom: 15, left: 12, right: 12),
+            child: PieChart(
+              dataMap: dataMap,
+              animationDuration: const Duration(milliseconds: 800),
+              colorList: colorList,
+              initialAngleInDegree: 0,
+              chartType: ChartType.disc,
+              ringStrokeWidth: 32,
+              legendOptions: const LegendOptions(
+                showLegendsInRow: false,
+                legendPosition: LegendPosition.right,
+                showLegends: true,
+                legendShape: BoxShape.circle,
+                legendTextStyle: TextStyle(
+                  fontWeight: FontWeight.w400,
+                  fontFamily: 'Inter',
+                ),
+              ),
+              chartValuesOptions: const ChartValuesOptions(
+                showChartValueBackground: true,
+                showChartValues: true,
+                showChartValuesInPercentage: true,
+                showChartValuesOutside: false,
+                decimalPlaces: 1,
+              ),
+            )),
+      ),
+    ];
+  }
+
+  double calculateYearProgress() {
+    DateTime now = DateTime.now();
+
+    // Calculate the day number of the current date in the year
+    int dayOfYear = int.parse(DateFormat('D').format(now));
+
+    // Calculate the total number of days in the year
+    bool isLeapYear =
+        (now.year % 4 == 0 && now.year % 100 != 0) || now.year % 400 == 0;
+    int totalDaysInYear = isLeapYear ? 366 : 365;
+
+    // Calculate the year progress percentage
+    double yearProgress = 100 * dayOfYear / totalDaysInYear;
+
+    return yearProgress;
+  }
+
+  Widget buildProgressCard() {
+    double monthProgress = 100 *
+        DateTime.now().day /
+        DateUtils.getDaysInMonth(DateTime.now().year, DateTime.now().month);
+
+    double yearProgress = calculateYearProgress();
+    return Card(
+      margin: const EdgeInsets.only(left: 5, right: 5, top: 10),
+      child: Padding(
+        padding:
+            const EdgeInsets.only(top: 15, bottom: 30, left: 12, right: 12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 5),
+            const Text("Progress",
+                style: TextStyle(
+                    fontFamily: 'Inter',
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold)),
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Month Progress",
+                  style: TextStyle(
+                    fontFamily: 'Inter',
+                    color: Colors.grey[600],
+                  ),
+                ),
+                Text(
+                  "${monthProgress.toStringAsFixed(0)}%",
+                  style: const TextStyle(
+                    fontFamily: 'Inter',
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 5),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10.0),
+                child: LinearPercentIndicator(
+                  lineHeight: 15.0,
+                  percent: monthProgress / 100,
+                  progressColor: Colors.red[400],
+                  backgroundColor: Colors.grey[300],
+                  barRadius: const Radius.circular(10),
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text("Year Progress",
+                    style: TextStyle(
+                        fontFamily: 'Inter', color: Colors.grey[600])),
+                Text("${yearProgress.toStringAsFixed(0)}%",
+                    style: const TextStyle(
+                        fontFamily: 'Inter',
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold)),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 5),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10.0),
+                child: LinearPercentIndicator(
+                  lineHeight: 15.0,
+                  percent: yearProgress / 100,
+                  progressColor: Colors.blue[400],
+                  backgroundColor: Colors.grey[300],
+                  barRadius: const Radius.circular(10),
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

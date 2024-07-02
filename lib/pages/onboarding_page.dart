@@ -97,6 +97,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
       context: context,
       builder: (BuildContext context) {
         return SizedBox(
+          height: 300,
           child: Center(
             child: Container(
               child: Column(
@@ -130,7 +131,6 @@ class _OnboardingPageState extends State<OnboardingPage> {
                   //     ],
                   //   ),
                   // ),
-                  const SizedBox(height: 20),
                   SignInButton(
                     Buttons.google,
                     padding: const EdgeInsets.all(12),
