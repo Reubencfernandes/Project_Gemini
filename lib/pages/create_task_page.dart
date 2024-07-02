@@ -1,11 +1,15 @@
 import 'dart:convert';
 
-import 'package:ayumi/pages/Components/Taskcard.dart';
+import 'package:ayumi/entities/task.dart';
+import 'package:ayumi/pages/components/bottom_tab_navigation.dart';
+import 'package:ayumi/pages/components/plans_for_today.dart';
+import 'package:ayumi/services/database_service.dart';
 import 'package:flutter/material.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:intl/intl.dart';
 
-import 'Components/navigate.dart';
+const String promptStart =
+    "Create a schedule for my day. Give output in plain JSON format as an array with title, description, startTimeISO, endTimeISO and category (eg. sports, education, work, hobby). Do not output markdown.";
 
 class CreateTaskPage extends StatefulWidget {
   const CreateTaskPage({super.key});
@@ -33,21 +37,6 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
     description.text = '';
   }
 
-  List<Widget> buildCards(int count) {
-    List<Widget> cards = [];
-    for (int i = 0; i < count; i++) {
-      cards.add(
-        const TaskCard(
-          title: "Rise and Shine",
-          description:
-              "Wake up, get ready, eat a healthy breakfast to fuel your brain for a day of learning!",
-          time: "7:00 AM",
-        ),
-      );
-    }
-    return cards;
-  }
-
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -71,36 +60,16 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
         margin: const EdgeInsets.only(top: 50, left: 10, right: 10),
         child: Column(
           children: [
-            Row(
+            const Row(
               crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.grey[300],
-                    shadowColor: Colors.transparent,
-                  ),
-                  child:
-                      const Text("Cancel", style: TextStyle(color: Colors.red)),
-                ),
-                const Text(
+                Text(
                   "New Task",
                   style: TextStyle(
                     fontSize: 20,
                     fontFamily: 'Inter',
                     fontWeight: FontWeight.bold,
-                  ),
-                ),
-                ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.grey[300],
-                    shadowColor: Colors.transparent,
-                  ),
-                  child: const Text(
-                    "Done",
-                    style: TextStyle(color: Colors.blue),
                   ),
                 ),
               ],
@@ -109,7 +78,7 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
               child: ListView(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.all(20),
+                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -166,22 +135,47 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
                               ),
                               onPressed: () async {
                                 String textDescription =
-                                    'I wake up at 6:30 AM, go for a jog, have breakfast at 7:30 AM, attend online classes from 8:30 AM to 12:30 PM, and spend the afternoon working on projects.';
-                                final content = [
-                                  Content.text(
-                                      'create schedule for me for my day give output in plain JSON format as an array with title,description,startTimeISO,endTimeISO and category (sports,education,work,hobbies). Do not output markdown. $textDescription')
-                                ];
-                                final response =
-                                    await model.generateContent(content);
-                                String? jsonResponseText = response.text;
-                                print(jsonResponseText);
+                                    'I wake up at 6:30 AM, go for a jog, have breakfast at 7:30 AM, attend online classes from 8:30 AM to 12:30 PM. In the afternoon I work on my side coding projects, finally at 6PM I go to the gym.';
 
-                                jsonResponseText = jsonResponseText?.substring(
-                                    7, jsonResponseText.length - 4);
+                                String todayDate =
+                                    DateTime.now().toIso8601String();
+
+                                final response = await model.generateContent([
+                                  Content.text(
+                                      '$promptStart Today\'s date is $todayDate. $textDescription')
+                                ]);
+
+                                if (response.text == null) {
+                                  // TODO: show error to user
+                                  print("Failed to generate response text");
+                                  return;
+                                }
+
+                                String jsonResponseText = response.text!;
+
+                                print("Raw: $jsonResponseText");
+
+                                jsonResponseText = jsonResponseText.substring(
+                                    jsonResponseText.indexOf('['),
+                                    jsonResponseText.lastIndexOf(']') + 1);
+
+                                print("Substring: $jsonResponseText");
 
                                 List<dynamic> jsonData =
                                     await json.decode(jsonResponseText!);
+
                                 print(jsonData);
+
+                                for (var task in jsonData) {
+                                  await DatabaseService().addTask(Task(
+                                    title: task['title'],
+                                    description: task['description'],
+                                    startTime:
+                                        DateTime.parse(task['startTimeISO']),
+                                    endTime: DateTime.parse(task['endTimeISO']),
+                                    category: task['category'],
+                                  ));
+                                }
                               },
                               child: const Text(
                                 "Generate",
@@ -195,29 +189,7 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
                           ],
                         ),
                         const SizedBox(height: 40),
-                        const Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Plans For Today",
-                              style: TextStyle(
-                                fontFamily: 'Inter',
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Text(
-                              "0 Tasks",
-                              style: TextStyle(
-                                color: Colors.blue,
-                                fontFamily: 'Inter',
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                        ...buildCards(0),
+                        const PlansForToday(),
                       ],
                     ),
                   ),
@@ -227,7 +199,7 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
           ],
         ),
       ),
-      bottomNavigationBar: const lastpart(),
+      bottomNavigationBar: const BottomTabNavigation(),
     );
   }
 }

@@ -1,14 +1,21 @@
+import 'package:isar/isar.dart';
+
+part 'task.g.dart';
+
+@collection
 class Task {
-  final String id;
-  final String title;
-  final String description;
-  final DateTime startTime;
-  final DateTime endTime;
+  Id? id;
+  String title;
+  String description;
+  String category;
+  DateTime startTime;
+  DateTime endTime;
 
   Task({
-    required this.id,
+    this.id = Isar.autoIncrement,
     required this.title,
     required this.description,
+    required this.category,
     required this.startTime,
     required this.endTime,
   });

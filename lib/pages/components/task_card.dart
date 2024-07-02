@@ -1,53 +1,47 @@
+import 'package:ayumi/pages/components/my_badge.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+
+import '../../entities/task.dart';
 
 class TaskCard extends StatelessWidget {
-  final String title;
-  final String description;
-  final String time;
+  final Task task;
+
+  static final _timeFormat = DateFormat("h:mm a");
 
   const TaskCard({
     super.key,
-    required this.title,
-    required this.description,
-    required this.time,
+    required this.task,
   });
 
   @override
   Widget build(BuildContext context) {
+    String formattedTime =
+        "${_timeFormat.format(task.startTime)} - ${_timeFormat.format(task.endTime)}";
+
     return Card(
       margin: const EdgeInsets.only(left: 5, right: 5, top: 10),
       child: Padding(
-        padding: const EdgeInsets.only(
-            top: 15, bottom: 30, left: 12, right: 12),
+        padding:
+            const EdgeInsets.only(top: 15, bottom: 15, left: 12, right: 12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ElevatedButton(
-              onPressed: () {}, // Non-null callback
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.pink[100],
-              ),
-              child: Text(
-                "Work",
-                style: TextStyle(
-                  color: Colors.red[900],
-                  fontFamily: 'Inter',
-                  fontSize: 14,
-                ),
-              ),
+            MyBadge(
+              text: task.category,
             ),
-            const SizedBox(height: 5),
+            const SizedBox(height: 6),
             Text(
-              title,
+              task.title,
               style: const TextStyle(
                 fontFamily: 'Inter',
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 8),
             Text(
-              description,
+              task.description,
               style: const TextStyle(
                 fontFamily: 'Inter',
                 color: Colors.black,
@@ -56,10 +50,10 @@ class TaskCard extends StatelessWidget {
               maxLines: null,
               overflow: TextOverflow.visible,
             ),
-            const SizedBox(height: 15),
+            const SizedBox(height: 12),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const Icon(
                   Icons.timer,
@@ -67,11 +61,10 @@ class TaskCard extends StatelessWidget {
                 ),
                 const SizedBox(width: 10),
                 Text(
-                  time,
+                  formattedTime,
                   style: TextStyle(
                     fontFamily: 'Inter',
                     color: Colors.grey[600],
-                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ],

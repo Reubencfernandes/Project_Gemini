@@ -1,21 +1,18 @@
 import 'package:flutter/material.dart';
 
-class lastpart extends StatefulWidget {
-  const lastpart({super.key});
-
+class BottomTabNavigation extends StatefulWidget {
+  const BottomTabNavigation({super.key});
 
   @override
-  State<lastpart> createState() => _NavigationBarState();
+  State<BottomTabNavigation> createState() => _NavigationBarState();
 }
 
-class _NavigationBarState extends State<lastpart> {
-  int _selectedIndex = 0; // Use lowercase with underscores for private variables.
-
+class _NavigationBarState extends State<BottomTabNavigation> {
+  int _selectedIndex = 0;
   final List<BottomNavigationBarItem> _bottomNavItems = [
-    // Renamed for clarity and consistency.
     const BottomNavigationBarItem(
       icon: Icon(Icons.home),
-      label: 'Home', // Capitalize first letter for consistency.
+      label: 'Home',
     ),
     const BottomNavigationBarItem(
       icon: Icon(Icons.create),
@@ -23,7 +20,7 @@ class _NavigationBarState extends State<lastpart> {
     ),
     const BottomNavigationBarItem(
       icon: Icon(Icons.list),
-      label: 'List',
+      label: 'Tasks',
     ),
   ];
 
@@ -34,8 +31,8 @@ class _NavigationBarState extends State<lastpart> {
       currentIndex: _selectedIndex,
       onTap: (index) {
         setState(() {
-          switch(index)
-          {
+          _selectedIndex = index;
+          switch (index) {
             case 0:
               Navigator.pushNamed(context, '/home');
               break;
@@ -46,7 +43,6 @@ class _NavigationBarState extends State<lastpart> {
               Navigator.pushNamed(context, '/tasks');
               break;
           }
-          _selectedIndex = index;
         });
       },
     );

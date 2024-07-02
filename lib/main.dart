@@ -1,9 +1,11 @@
 import 'package:ayumi/firebase_options.dart';
-import 'package:ayumi/pages/create_page.dart';
+import 'package:ayumi/pages/create_task_page.dart';
 import 'package:ayumi/pages/onboarding_page.dart';
-import 'package:ayumi/pages/task_page.dart';
+import 'package:ayumi/pages/tasks_page.dart';
+import 'package:ayumi/services/database_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'pages/home_page.dart';
@@ -14,14 +16,14 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  runApp(const MyApp());
+  DatabaseService().init();
 
-  // runApp(MultiProvider(
-  //   providers: [
-  //     ChangeNotifierProvider(create: (context) => AuthService()),
-  //   ],
-  //   child: const MyApp(),
-  // ));
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (context) => DatabaseService()),
+    ],
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -37,7 +39,7 @@ class MyApp extends StatelessWidget {
         routes: {
           "/home": (context) => const HomePage(),
           "/create": (context) => const CreateTaskPage(),
-          "/tasks": (context) => const TaskPage(),
+          "/tasks": (context) => const TasksPage(),
         },
       );
     });
