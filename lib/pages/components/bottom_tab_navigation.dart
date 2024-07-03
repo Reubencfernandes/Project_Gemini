@@ -9,6 +9,7 @@ class BottomTabNavigation extends StatefulWidget {
 
 class _NavigationBarState extends State<BottomTabNavigation> {
   int _selectedIndex = 0;
+  PageController _pageController = PageController();
   final List<BottomNavigationBarItem> _bottomNavItems = [
     const BottomNavigationBarItem(
       icon: Icon(Icons.home),
@@ -26,25 +27,27 @@ class _NavigationBarState extends State<BottomTabNavigation> {
 
   @override
   Widget build(BuildContext context) {
-    return BottomNavigationBar(
-      items: _bottomNavItems,
-      currentIndex: _selectedIndex,
-      onTap: (index) {
-        setState(() {
-          _selectedIndex = index;
-          switch (index) {
-            case 0:
-              Navigator.pushNamed(context, '/home');
-              break;
-            case 1:
-              Navigator.pushNamed(context, '/create');
-              break;
-            case 2:
-              Navigator.pushNamed(context, '/tasks');
-              break;
-          }
-        });
-      },
+    return Container(
+        child: BottomNavigationBar(
+          items: _bottomNavItems,
+          currentIndex: _selectedIndex,
+          onTap: (index) {
+            setState(() {
+              _selectedIndex = index;
+              switch (index) {
+                case 0:
+                  Navigator.pushNamed(context, '/home');
+                  break;
+                case 1:
+                  Navigator.pushNamed(context, '/create');
+                  break;
+                case 2:
+                  Navigator.pushNamed(context, '/tasks');
+                  break;
+              }
+            });
+          },
+        ),
     );
   }
 }
