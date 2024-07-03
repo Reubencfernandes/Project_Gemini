@@ -136,7 +136,10 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
                               onPressed: () async {
                                 String textDescription =
                                     'I wake up at 6:30 AM, go for a jog, have breakfast at 7:30 AM, attend online classes from 8:30 AM to 12:30 PM. In the afternoon I work on my side coding projects, finally at 6PM I go to the gym.';
-
+                                if(description.text.isNotEmpty)
+                                  {
+                                    textDescription = description.text;
+                                  }
                                 String todayDate =
                                     DateTime.now().toIso8601String();
 
