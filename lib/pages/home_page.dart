@@ -49,7 +49,6 @@ class HomePage extends StatelessWidget {
 
   List<Widget> buildCurrentTask() {
     Task? currentTask = DatabaseService().getCurrentTask();
-
     double progressPercent = 0.0;
     if (currentTask != null) {
       progressPercent = 100 *
@@ -308,6 +307,7 @@ class WelcomeHeader extends StatelessWidget {
                               MaterialPageRoute(builder: (context)=>const OnboardingPage()),
                             );
                             await _authService.signOut();
+
                           },
                           child: const Text(
                             "LOGOUT",

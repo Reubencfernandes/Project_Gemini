@@ -1,5 +1,6 @@
 import 'package:ayumi/Services/auth_service.dart';
 import 'package:ayumi/entities/my_user.dart';
+import 'package:ayumi/pages/components/TaskDates.dart';
 import 'package:ayumi/pages/components/bottom_tab_navigation.dart';
 import 'package:ayumi/pages/components/plans_for_today.dart';
 import 'package:ayumi/pages/components/task_card.dart';
@@ -67,9 +68,10 @@ class TasksPage extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 20),
+            DatesOfTasks(),
             Expanded(
               child: ListView(
-                children: const [
+                children:  [
                   PlansForToday(),
                 ],
               ),
