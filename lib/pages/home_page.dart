@@ -139,7 +139,7 @@ class HomePage extends StatelessWidget {
             colorList: colorList,
             initialAngleInDegree: 0,
             chartType: ChartType.disc,
-            ringStrokeWidth: 32,
+            ringStrokeWidth:32,
             legendOptions: const LegendOptions(
               showLegendsInRow: false,
               legendPosition: LegendPosition.right,
