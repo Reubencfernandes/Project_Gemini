@@ -27,7 +27,7 @@ class PlansForToday extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           const Text(
-            "Plans For Today",
+            "Plans",
             style: TextStyle(
               fontFamily: 'Inter',
               fontSize: 20,

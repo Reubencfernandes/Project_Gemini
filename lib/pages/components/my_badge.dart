@@ -10,7 +10,7 @@ class MyBadge extends StatelessWidget {
     Color badgeColor = ColorHash(text).toColor();
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      padding: const EdgeInsets.all(9),
       decoration: BoxDecoration(
         color: badgeColor,
         borderRadius: BorderRadius.circular(20),
@@ -20,7 +20,7 @@ class MyBadge extends StatelessWidget {
         style: TextStyle(
           color: lightenColor(badgeColor, 0.6),
           fontFamily: 'Inter',
-          fontSize: 12,
+          fontSize: 14,
         ),
       ),
     );

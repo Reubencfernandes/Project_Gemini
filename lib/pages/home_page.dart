@@ -128,7 +128,8 @@ class HomePage extends StatelessWidget {
 
     return [
       const Text("Analysis of Tasks", style: TextStyle(fontFamily: 'Inter', fontSize: 20, fontWeight: FontWeight.bold)),
-      tasks.length >0 ? Card(
+      tasks.length > 0
+          ? Card(
         margin: const EdgeInsets.only(left: 5, right: 5, top: 10),
         child: Padding(
           padding: const EdgeInsets.only(top: 15, bottom: 15, left: 12, right: 12),
@@ -156,27 +157,28 @@ class HomePage extends StatelessWidget {
           ),
         ),
       )
-      : Text("Analysis of tasks couldn't be performed due to no tasks being saved.",style: TextStyle(fontFamily: 'Inter',fontWeight: FontWeight.w500,),),
+          : const Text(
+        "Analysis of tasks couldn't be performed due to no tasks being saved.",
+        style: TextStyle(
+          fontFamily: 'Inter',
+          fontWeight: FontWeight.w500,
+        ),
+      ),
     ];
   }
 
   double calculateYearProgress() {
     DateTime now = DateTime.now();
-
     int dayOfYear = int.parse(DateFormat('D').format(now));
-
     bool isLeapYear = (now.year % 4 == 0 && now.year % 100 != 0) || now.year % 400 == 0;
     int totalDaysInYear = isLeapYear ? 366 : 365;
-
-    double yearProgress = 100 * dayOfYear / totalDaysInYear;
-
-    return yearProgress;
+    return 100 * dayOfYear / totalDaysInYear;
   }
 
   Widget buildProgressCard() {
     double monthProgress = 100 * DateTime.now().day / DateUtils.getDaysInMonth(DateTime.now().year, DateTime.now().month);
-
     double yearProgress = calculateYearProgress();
+
     return Card(
       margin: const EdgeInsets.only(left: 5, right: 5, top: 10),
       child: Padding(
@@ -239,9 +241,14 @@ class HomePage extends StatelessWidget {
   }
 }
 
-class WelcomeHeader extends StatelessWidget {
+class WelcomeHeader extends StatefulWidget {
   const WelcomeHeader({super.key});
 
+  @override
+  _WelcomeHeaderState createState() => _WelcomeHeaderState();
+}
+
+class _WelcomeHeaderState extends State<WelcomeHeader> {
   @override
   Widget build(BuildContext context) {
     final AuthService _authService = AuthService();
@@ -276,7 +283,7 @@ class WelcomeHeader extends StatelessWidget {
         ),
         ElevatedButton(
           style: ElevatedButton.styleFrom(
-            padding: EdgeInsets.all(20),
+            padding: const EdgeInsets.all(20),
           ),
           onPressed: () async {
             showModalBottomSheet(
@@ -303,11 +310,14 @@ class WelcomeHeader extends StatelessWidget {
                             ),
                           ),
                           onPressed: () async {
-                            Navigator.push(context,
-                              MaterialPageRoute(builder: (context)=>const OnboardingPage()),
-                            );
-                            await _authService.signOut();
-
+                            AuthService obj = AuthService();
+                            await obj.signOut();
+                            if (mounted) {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(builder: (context) => const OnboardingPage()),
+                              );
+                            }
                           },
                           child: const Text(
                             "LOGOUT",
@@ -321,7 +331,7 @@ class WelcomeHeader extends StatelessWidget {
               },
             );
           },
-          child: const Icon(Icons.logout,color: Colors.black),
+          child: const Icon(Icons.logout, color: Colors.black),
         ),
       ],
     );

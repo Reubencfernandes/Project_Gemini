@@ -5,9 +5,11 @@ import 'package:path_provider/path_provider.dart';
 
 class DatabaseService extends ChangeNotifier {
   static final DatabaseService _singleton = DatabaseService._internal();
+
   factory DatabaseService() {
     return _singleton;
   }
+
   DatabaseService._internal();
 
   // Members
@@ -26,14 +28,26 @@ class DatabaseService extends ChangeNotifier {
   Future<List<Task>> _getTasks() async {
     // get the time as 00:00 and 23:59 to use in filter
     DateTime startOfDay = DateTime(
-      DateTime.now().year,
-      DateTime.now().month,
-      DateTime.now().day,
+      DateTime
+          .now()
+          .year,
+      DateTime
+          .now()
+          .month,
+      DateTime
+          .now()
+          .day,
     );
     DateTime endOfDay = DateTime(
-      DateTime.now().year,
-      DateTime.now().month,
-      DateTime.now().day + 1,
+      DateTime
+          .now()
+          .year,
+      DateTime
+          .now()
+          .month,
+      DateTime
+          .now()
+          .day + 1,
     );
 
     return await _isar.tasks
@@ -76,4 +90,5 @@ class DatabaseService extends ChangeNotifier {
         .endTimeGreaterThan(DateTime.now())
         .findFirstSync();
   }
+
 }
