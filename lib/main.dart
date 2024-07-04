@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
       return MaterialApp(
         title: "Project Gemini",
         debugShowCheckedModeBanner: false,
-        home: const BottomTabNavigation(),
+        home: const OnboardingPage(),
         routes: {
           "/navigate": (context) => const BottomTabNavigation(),
           "/home": (context) => const HomePage(),
