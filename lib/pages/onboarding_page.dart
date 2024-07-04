@@ -18,13 +18,14 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
     AuthService().authStateChanges.listen((MyUser? user) {
       if (user != null) {
-        Navigator.pushNamed(context, '/home');
+        Navigator.pushNamed(context, '/navigate');
       }
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: Colors.black,
       body: Center(
@@ -35,7 +36,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
               "images/final.jpg",
               fit: BoxFit.cover,
               width: 100.w,
-              height: 60.h, // Adjusted for better responsiveness
+              height: screenHeight * 0.5, // Adjusted for better responsiveness
             ),
             SizedBox(height: 2.h), // Use percentage-based spacing
             Text(

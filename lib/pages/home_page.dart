@@ -43,7 +43,6 @@ class HomePage extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: const BottomTabNavigation(),
     );
   }
 

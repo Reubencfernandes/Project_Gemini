@@ -1,86 +1,156 @@
 import 'package:ayumi/Services/auth_service.dart';
 import 'package:ayumi/entities/my_user.dart';
-import 'package:ayumi/pages/components/TaskDates.dart';
 import 'package:ayumi/pages/components/bottom_tab_navigation.dart';
 import 'package:ayumi/pages/components/plans_for_today.dart';
 import 'package:ayumi/pages/components/task_card.dart';
 import 'package:ayumi/services/database_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animated_button/flutter_animated_button.dart';
 import 'package:intl/intl.dart';
 
-class TasksPage extends StatelessWidget {
+class TasksPage extends StatefulWidget {
   const TasksPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    DateTime now = DateTime.now().toLocal();
-    String formattedTime = DateFormat('hh:mm a').format(now);
-    String formattedMonth = DateFormat('MMMM dd, yyyy').format(now);
+  _TasksPageState createState() => _TasksPageState();
+}
 
-    List<Widget> buildCards() {
-      return DatabaseService().tasks.map((task) {
-        return TaskCard(task: task);
-      }).toList();
+class _TasksPageState extends State<TasksPage> {
+  late DateTime now;
+  late String formattedTime;
+  late String formattedMonth;
+  late DateTime selectedDate;
+  late MyUser user;
+
+  @override
+  void initState() {
+    super.initState();
+    now = DateTime.now().toLocal();
+    formattedTime = DateFormat('hh:mm a').format(now);
+    formattedMonth = DateFormat('MMMM dd, yyyy').format(now);
+    selectedDate = DateTime.now();
+    user = AuthService().getCurrentUser();
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: now,
+      firstDate: now,
+      lastDate: DateTime(now.year, now.month + 1, now.day),
+      builder: (BuildContext context,Widget? child)
+        {
+          return Theme(data: ThemeData.light().copyWith(
+colorScheme: const ColorScheme.light(
+  primary: Colors.black87,
+)
+          ), child:child!);
+        }
+    );
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+      });
     }
+  }
 
-    MyUser user = AuthService().getCurrentUser();
+  List<Widget> buildCards() {
+    return DatabaseService().tasks.map((task) {
+      return TaskCard(task: task);
+    }).toList();
+  }
 
-    return Scaffold(
-      backgroundColor: Colors.grey[300],
-      body: Container(
+  @override
+  Widget build(BuildContext context) {
+    return Container(
         margin: const EdgeInsets.only(top: 50, left: 20, right: 20),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(formattedTime,
-                        style: TextStyle(
-                          fontFamily: 'Inter',
-                          fontSize: 32,
-                          color: Colors.indigo[900],
-                          fontWeight: FontWeight.bold,
-                        )),
-                    Text(formattedMonth,
-                        style: TextStyle(
-                          fontFamily: 'Inter',
-                          fontSize: 20,
-                          color: Colors.indigo[900],
-                          fontWeight: FontWeight.bold,
-                        )),
+                    Text(
+                      formattedTime,
+                      style: TextStyle(
+                        fontFamily: 'Inter',
+                        fontSize: 32,
+                        color: Colors.indigo[900],
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      formattedMonth,
+                      style: TextStyle(
+                        fontFamily: 'Inter',
+                        fontSize: 20,
+                        color: Colors.indigo[900],
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ],
                 ),
                 ClipRRect(
-                  borderRadius: BorderRadius.circular(
-                      50.0), // Adjust the radius as needed
+                  borderRadius: BorderRadius.circular(50.0),
                   child: SizedBox(
-                      width: 50.0, // Adjust the width as needed
-                      height: 50.0, // Adjust the height as needed
-                      child: Image.network(
-                        user.photoUrl,
-                        fit: BoxFit.cover,
-                      )),
+                    width: 50.0,
+                    height: 50.0,
+                    child: Image.network(
+                      user.photoUrl,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
               ],
             ),
             const SizedBox(height: 20),
-            DatesOfTasks(),
+            Container(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+
+                      children: [
+                        SizedBox(height: 10,),
+                        const Text("Select Date",style: TextStyle(fontFamily: 'Inter',color: Colors.black,fontSize: 15)),
+                        SizedBox(height: 10,),
+                        TextField(
+
+                          onTap: () => _selectDate(context),
+                          readOnly: true,
+                          decoration: InputDecoration(
+                            fillColor: Colors.white,
+                            filled: true,
+                            border: InputBorder.none,
+                            hintText: formattedMonth,
+                          ),
+                        ),
+
+                      ],
+                    ),
+
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
             Expanded(
               child: ListView(
-                children:  [
+                children: [
                   PlansForToday(),
+                  ...buildCards(),
                 ],
               ),
             ),
           ],
         ),
-      ),
-      bottomNavigationBar: const BottomTabNavigation(),
     );
   }
 }
-//9

@@ -47,6 +47,14 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
       initialDate: selectedDate,
       firstDate: now,
       lastDate: lastDate,
+        builder: (BuildContext context,Widget? child)
+        {
+          return Theme(data: ThemeData.light().copyWith(
+              colorScheme: const ColorScheme.light(
+                primary: Colors.black87,
+              )
+          ), child:child!);
+        }
     );
     if (picked != null && picked != selectedDate) {
       setState(() {
@@ -99,9 +107,7 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey[300],
-      body: Container(
+    return  Container(
         margin: const EdgeInsets.only(top: 50, left: 10, right: 10),
         child: Column(
           children: [
@@ -112,13 +118,16 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
                 ElevatedButton(
                   onPressed: () {
                     description.text = '';
+                    setState(() {
+                      tasksForToday.clear();
+                    });
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.grey[300],
                     elevation: 0,
                   ),
                   child: const Text(
-                    "Clear",
+                    "Clear All",
                     style: TextStyle(
                       fontFamily: 'Inter',
                       color: Colors.red,
@@ -223,7 +232,7 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
                               ),
                               backgroundColor: buttonColor,
                               selectedTextColor: Colors.black,
-                              transitionType: TransitionType.CENTER_TB_IN,
+                              transitionType: TransitionType.BOTTOM_CENTER_ROUNDER,
                               onPress: _generateTasks,
                             ),
                           ],
@@ -269,8 +278,6 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
             ),
           ],
         ),
-      ),
-      bottomNavigationBar: const BottomTabNavigation(),
     );
   }
 }
