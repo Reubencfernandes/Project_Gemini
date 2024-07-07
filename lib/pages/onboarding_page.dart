@@ -105,7 +105,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   onPressed: () {
-                    AuthService().signInWithGoogle();
+
                   },
                 ),
               ],

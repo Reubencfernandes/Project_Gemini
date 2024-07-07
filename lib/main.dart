@@ -2,6 +2,7 @@ import 'package:ayumi/firebase_options.dart';
 import 'package:ayumi/pages/components/bottom_tab_navigation.dart';
 import 'package:ayumi/pages/create_task_page.dart';
 import 'package:ayumi/pages/onboarding_page.dart';
+import 'package:ayumi/pages/register.dart';
 import 'package:ayumi/pages/tasks_page.dart';
 import 'package:ayumi/services/database_service.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -36,12 +37,13 @@ class MyApp extends StatelessWidget {
       return MaterialApp(
         title: "Project Gemini",
         debugShowCheckedModeBanner: false,
-        home: const OnboardingPage(),
+        home: const CreateAccount(),
         routes: {
           "/navigate": (context) => const BottomTabNavigation(),
           "/home": (context) => const HomePage(),
           "/create": (context) => const CreateTaskPage(),
           "/tasks": (context) => const TasksPage(),
+          "/sign":(context) => const CreateAccount(),
         },
       );
     });
