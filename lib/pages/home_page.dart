@@ -127,8 +127,7 @@ class HomePage extends StatelessWidget {
 
     return [
       const Text("Analysis of Tasks", style: TextStyle(fontFamily: 'Inter', fontSize: 20, fontWeight: FontWeight.bold)),
-      tasks.length > 0
-          ? Card(
+      Card(
         margin: const EdgeInsets.only(left: 5, right: 5, top: 10),
         child: Padding(
           padding: const EdgeInsets.only(top: 15, bottom: 15, left: 12, right: 12),
@@ -156,13 +155,13 @@ class HomePage extends StatelessWidget {
           ),
         ),
       )
-          : const Text(
+          /* const Text(
         "Analysis of tasks couldn't be performed due to no tasks being saved.",
         style: TextStyle(
           fontFamily: 'Inter',
           fontWeight: FontWeight.w500,
         ),
-      ),
+      ),*/
     ];
   }
 
@@ -249,9 +248,9 @@ class WelcomeHeader extends StatefulWidget {
 
 class _WelcomeHeaderState extends State<WelcomeHeader> {
   @override
-  Widget build(BuildContext context) {
-    final AuthService _authService = AuthService();
-    MyUser user = _authService.getCurrentUser();
+  Widget build(BuildContext context)  {
+
+
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -263,7 +262,7 @@ class _WelcomeHeaderState extends State<WelcomeHeader> {
             ClipRRect(
               borderRadius: BorderRadius.circular(50.0),
               child: Image.network(
-                user.photoUrl,
+                "https://yt3.ggpht.com/ytc/AIdro_lG10P4m8LYfMtwEO1KRLthQrqWR2aDuGEAi4TVCVbJsJc=s48-c-k-c0x00ffffff-no-rj",
                 width: 50,
                 height: 50,
                 fit: BoxFit.cover,
@@ -274,7 +273,7 @@ class _WelcomeHeaderState extends State<WelcomeHeader> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text("Hello,", style: TextStyle(fontFamily: 'Inter', color: Colors.black)),
-                Text(user.name,
+                Text(DatabaseService().readUsers().toString(),
                     style: const TextStyle(fontFamily: 'Inter', fontSize: 20, fontWeight: FontWeight.bold)),
               ],
             ),
@@ -285,49 +284,23 @@ class _WelcomeHeaderState extends State<WelcomeHeader> {
             padding: const EdgeInsets.all(20),
           ),
           onPressed: () async {
-            showModalBottomSheet(
+            showDialog(
+              barrierDismissible: false,
               context: context,
-              builder: (BuildContext context) {
-                return SizedBox(
-                  height: 300,
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        const Text(
-                          "Are You Sure You Want To Signout?",
-                          style: TextStyle(fontSize: 20, fontFamily: 'Inter', fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(height: 20),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.redAccent,
-                            padding: const EdgeInsets.only(top: 15, left: 40, right: 40, bottom: 15),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                          onPressed: () async {
-                            AuthService obj = AuthService();
-                            await obj.signOut();
-                            if (mounted) {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(builder: (context) => const OnboardingPage()),
-                              );
-                            }
-                          },
-                          child: const Text(
-                            "LOGOUT",
-                            style: TextStyle(color: Colors.black, fontSize: 30, fontFamily: 'Bebas Neue'),
-                          ),
-                        ),
-                      ],
-                    ),
+              builder: (BuildContext context)=> AlertDialog(
+                title: const Text('Do you wish to logout ?'),
+                content: const Text('On logging out all Data will be Cleared Stored on your Device'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, 'Cancel'),
+                    child: const Text('Cancel'),
                   ),
-                );
-              },
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, 'OK'),
+                    child: const Text('OK'),
+                  ),
+                ],
+              ),
             );
           },
           child: const Icon(Icons.logout, color: Colors.black),

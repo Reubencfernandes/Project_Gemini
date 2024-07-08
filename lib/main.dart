@@ -3,7 +3,6 @@ import 'package:ayumi/pages/create_task_page.dart';
 import 'package:ayumi/pages/onboarding_page.dart';
 import 'package:ayumi/pages/register.dart';
 import 'package:ayumi/pages/tasks_page.dart';
-import 'package:ayumi/services/Database_user.dart';
 import 'package:ayumi/services/database_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -11,10 +10,17 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'pages/home_page.dart';
 
-void main(){
-
-  runApp(git const MyApp(),
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await DatabaseService().init();
+  await DatabaseService().readUsers();
+  runApp(
+    ChangeNotifierProvider(
+      create: (context)=> DatabaseService(),
+      child: const MyApp(),
+    ),
   );
+
 }
 
 class MyApp extends StatelessWidget {
@@ -26,7 +32,7 @@ class MyApp extends StatelessWidget {
       return MaterialApp(
         title: "Project Gemini",
         debugShowCheckedModeBanner: false,
-        home: const CreateAccount(),
+        home: const OnboardingPage(),
         routes: {
           "/navigate": (context) => const BottomTabNavigation(),
           "/home": (context) => const HomePage(),

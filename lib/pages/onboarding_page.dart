@@ -1,8 +1,11 @@
 
 import 'package:ayumi/entities/user.dart';
+import 'package:ayumi/pages/register.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:sign_in_button/sign_in_button.dart';
+
+import '../services/database_service.dart';
 
 class OnboardingPage extends StatefulWidget {
   const OnboardingPage({super.key});
@@ -13,14 +16,9 @@ class OnboardingPage extends StatefulWidget {
 
 class _OnboardingPageState extends State<OnboardingPage> {
   @override
-  void initState() {
+  void initState()  {
     super.initState();
 
-    AuthService().authStateChanges.listen((MyUser? user) {
-      if (user != null) {
-        Navigator.pushNamed(context, '/navigate');
-      }
-    });
   }
 
   @override
@@ -36,7 +34,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
               "images/final.jpg",
               fit: BoxFit.cover,
               width: 100.w,
-              height: screenHeight * 0.5, // Adjusted for better responsiveness
+              height: screenHeight * 0.7, // Adjusted for better responsiveness
             ),
             SizedBox(height: 2.h), // Use percentage-based spacing
             Text(
@@ -70,7 +68,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                   padding: EdgeInsets.symmetric(
                       vertical: 2.h, horizontal: 8.w)), // Adjusted for responsiveness
               onPressed: () {
-                showLoginModal(context);
+               Navigator.push(context, MaterialPageRoute(builder: (context)=>CreateAccount()));
               },
               child: Text(
                 "Get Started",
@@ -88,31 +86,4 @@ class _OnboardingPageState extends State<OnboardingPage> {
     );
   }
 
-  void showLoginModal(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return SizedBox(// Adjusted for better responsiveness
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SignInButton(
-                  Buttons.google,
-                  padding: EdgeInsets.all(2.h), // Use percentage-based padding
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  onPressed: () {
-
-                  },
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
 }

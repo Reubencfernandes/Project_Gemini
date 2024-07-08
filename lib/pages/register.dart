@@ -1,8 +1,12 @@
+import 'package:ayumi/pages/components/bottom_tab_navigation.dart';
+import 'package:ayumi/services/database_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:isar/isar.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+
+import '../entities/user.dart';
 
 class CreateAccount extends StatefulWidget {
   const CreateAccount({super.key});
@@ -37,7 +41,7 @@ class _CreateAccountState extends State<CreateAccount> {
     if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
-        formattedMonth = DateFormat('MMMM dd, yyyy').format(selectedDate);
+        formattedMonth = DateFormat('MMMM dd').format(selectedDate);
       });
     }
   }
@@ -48,10 +52,17 @@ class _CreateAccountState extends State<CreateAccount> {
     });
   }
 
-  void Register()
-  {
+  void Register(String hisName, String hisBirthday) {
+    alwayschange();
+    User newUser = User()
+      ..name = hisName
+      ..birthday = hisBirthday;
 
+    DatabaseService().addUser(newUser);
+    alwayschange();
+    Navigator.push(context, MaterialPageRoute(builder: (context) => BottomTabNavigation()));
   }
+
 
   @override
   void dispose() {
@@ -127,7 +138,7 @@ class _CreateAccountState extends State<CreateAccount> {
             const SizedBox(height: 30),
             ElevatedButton(
                 onPressed: () {
-                  alwayschange();
+                  Register(nameController.text, formattedMonth);
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.red,

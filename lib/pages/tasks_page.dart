@@ -16,20 +16,14 @@ class TasksPage extends StatefulWidget {
 }
 
 class _TasksPageState extends State<TasksPage> {
-  late DateTime now;
-  late String formattedTime;
-  late String formattedMonth;
-  late DateTime selectedDate;
-  late MyUser user;
+  late DateTime now = DateTime.now().toLocal();
+  late String formattedTime = DateFormat('hh:mm a').format(now);
+  late String formattedMonth = DateFormat('MMMM dd, yyyy').format(now);
+  late DateTime selectedDate = DateTime.now();
 
   @override
   void initState() {
     super.initState();
-    now = DateTime.now().toLocal();
-    formattedTime = DateFormat('hh:mm a').format(now);
-    formattedMonth = DateFormat('MMMM dd, yyyy').format(now);
-    selectedDate = DateTime.now();
-    user = AuthService().getCurrentUser();
   }
 
   Future<void> _selectDate(BuildContext context) async {
@@ -100,7 +94,7 @@ colorScheme: const ColorScheme.light(
                     width: 50.0,
                     height: 50.0,
                     child: Image.network(
-                      user.photoUrl,
+                      "https://yt3.ggpht.com/ytc/AIdro_lG10P4m8LYfMtwEO1KRLthQrqWR2aDuGEAi4TVCVbJsJc=s48-c-k-c0x00ffffff-no-rj",
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -144,7 +138,7 @@ colorScheme: const ColorScheme.light(
             Expanded(
               child: ListView(
                 children: [
-                  PlansForToday(),
+                  const PlansForToday(),
                   ...buildCards(),
                 ],
               ),
