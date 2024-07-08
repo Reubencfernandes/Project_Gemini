@@ -1,5 +1,5 @@
-import 'package:ayumi/Services/auth_service.dart';
-import 'package:ayumi/entities/my_user.dart';
+
+import 'package:ayumi/entities/user.dart';
 import 'package:ayumi/entities/task.dart';
 import 'package:ayumi/pages/components/bottom_tab_navigation.dart';
 import 'package:ayumi/pages/components/my_badge.dart';

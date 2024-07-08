@@ -1,31 +1,20 @@
-import 'package:ayumi/firebase_options.dart';
 import 'package:ayumi/pages/components/bottom_tab_navigation.dart';
 import 'package:ayumi/pages/create_task_page.dart';
 import 'package:ayumi/pages/onboarding_page.dart';
 import 'package:ayumi/pages/register.dart';
 import 'package:ayumi/pages/tasks_page.dart';
+import 'package:ayumi/services/Database_user.dart';
 import 'package:ayumi/services/database_service.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'pages/home_page.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
+void main(){
+
+  runApp(git const MyApp(),
   );
-
-  DatabaseService().init();
-
-  runApp(MultiProvider(
-    providers: [
-      ChangeNotifierProvider(create: (context) => DatabaseService()),
-    ],
-    child: const MyApp(),
-  ));
 }
 
 class MyApp extends StatelessWidget {

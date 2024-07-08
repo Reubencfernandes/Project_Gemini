@@ -1,5 +1,5 @@
-import 'package:ayumi/Services/auth_service.dart';
-import 'package:ayumi/entities/my_user.dart';
+
+import 'package:ayumi/entities/user.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:sign_in_button/sign_in_button.dart';
