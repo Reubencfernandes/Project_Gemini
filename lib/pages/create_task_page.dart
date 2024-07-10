@@ -163,6 +163,7 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
                         Task(
                           title: task['title'],
                           description: task['description'],
+                          day: DateFormat('dd MMMM yyyy').format(task['startTimeISO']),
                           startTime: DateTime.parse(task['startTimeISO']),
                           endTime: DateTime.parse(task['endTimeISO']),
                           category: task['category'],
@@ -289,6 +290,7 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
                           return TaskCard(
                             task: Task(
                               title: task['title'],
+                              day: DateFormat("dd-MM-YYYY").format(task['day']),
                               description: task['description'],
                               startTime: DateTime.parse(task['startTimeISO']),
                               endTime: DateTime.parse(task['endTimeISO']),
