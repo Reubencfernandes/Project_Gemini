@@ -1,13 +1,11 @@
 import 'dart:convert';
-import 'package:flutter_animated_button/flutter_animated_button.dart';
+
 import 'package:ayumi/entities/task.dart';
-import 'package:ayumi/pages/components/bottom_tab_navigation.dart';
-import 'package:ayumi/pages/components/plans_for_today.dart';
 import 'package:ayumi/services/database_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animated_button/flutter_animated_button.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart'; // Ensure to use provider
 
 import 'components/task_card.dart';
 
@@ -29,7 +27,8 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
   List<dynamic> jsonData = [];
   final model = GenerativeModel(
       model: 'gemini-1.5-flash',
-      apiKey: 'AIzaSyAzwL_9gB9jeWZEn13l88MjhySTEj4Pa8M'); // Replace with your actual API key
+      apiKey:
+          'AIzaSyAzwL_9gB9jeWZEn13l88MjhySTEj4Pa8M'); // Replace with your actual API key
   DateTime now = DateTime.now().toUtc();
   DateTime selectedDate = DateTime.now().toUtc();
   TextEditingController description = TextEditingController();
@@ -48,6 +47,7 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
       isGenerate = !isGenerate;
     });
   }
+
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -83,7 +83,8 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
 
     try {
       final response = await model.generateContent([
-        Content.text('$promptStart Today\'s date is $todayDate. $textDescription')
+        Content.text(
+            '$promptStart Today\'s date is $todayDate. $textDescription')
       ]);
 
       if (response.text == null) {
@@ -93,8 +94,9 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
 
       String jsonResponseText = response.text!;
       jsonResponseText = jsonResponseText.substring(
-          jsonResponseText.indexOf('['),
-          jsonResponseText.lastIndexOf(']') + 1);
+          jsonResponseText.indexOf('['), jsonResponseText.lastIndexOf(']') + 1);
+      print("Json Response Text: $jsonResponseText");
+
       jsonData = json.decode(jsonResponseText);
 
       setState(() {
@@ -110,7 +112,8 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
 
   void _showError(String message) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(message,style: TextStyle(fontFamily: 'Inter',fontSize: 15)),
+      content:
+          Text(message, style: TextStyle(fontFamily: 'Inter', fontSize: 15)),
       backgroundColor: Colors.red,
     ));
   }
@@ -154,28 +157,30 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
               ),
               ElevatedButton(
                 onPressed: () async {
-                  if(jsonData.isEmpty) {
+                  if (jsonData.isEmpty) {
                     _showError('Failed to generate response text');
                     return;
                   }
-                    for (var task in jsonData) {
-                      await DatabaseService().addTask(
-                        Task(
-                          title: task['title'],
-                          description: task['description'],
-                          day: DateFormat('dd MMMM yyyy').format(task['startTimeISO']),
-                          startTime: DateTime.parse(task['startTimeISO']),
-                          endTime: DateTime.parse(task['endTimeISO']),
-                          category: task['category'],
-                        ),
-                      );
-                    }
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text("Task Added to the Database",
-                        style: TextStyle(fontFamily: 'Inter', fontSize: 15),),
-                      backgroundColor: Colors.green,
-                    ));
-
+                  for (var task in jsonData) {
+                    await DatabaseService().addTask(
+                      Task(
+                        title: task['title'],
+                        description: task['description'],
+                        day: DateFormat('dd MMMM yyyy')
+                            .format(DateTime.parse(task['startTimeISO'])),
+                        startTime: DateTime.parse(task['startTimeISO']),
+                        endTime: DateTime.parse(task['endTimeISO']),
+                        category: task['category'],
+                      ),
+                    );
+                  }
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                    content: Text(
+                      "Task Added to the Database",
+                      style: TextStyle(fontFamily: 'Inter', fontSize: 15),
+                    ),
+                    backgroundColor: Colors.green,
+                  ));
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.grey[300],
@@ -215,7 +220,7 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
                           border: InputBorder.none,
                           filled: true,
                           hintText:
-                          'I wake up at 6:30 AM, go for a jog, have breakfast at 7:30 AM, attend online classes from 8:30 AM to 12:30 PM, and spend the afternoon working on projects.',
+                              'I wake up at 6:30 AM, go for a jog, have breakfast at 7:30 AM, attend online classes from 8:30 AM to 12:30 PM, and spend the afternoon working on projects.',
                         ),
                         maxLines: 8,
                       ),
@@ -286,29 +291,34 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
                       ),
                       isGenerate
                           ? Column(
-                        children: tasksForToday.map((task) {
-                          return TaskCard(
-                            task: Task(
-                              title: task['title'],
-                              day: DateFormat("dd-MM-YYYY").format(task['day']),
-                              description: task['description'],
-                              startTime: DateTime.parse(task['startTimeISO']),
-                              endTime: DateTime.parse(task['endTimeISO']),
-                              category: task['category'],
-                            ),
-                          );
-                        }).toList(),
-                      )
+                              children: tasksForToday.map((task) {
+                                return TaskCard(
+                                  task: Task(
+                                    title: task['title'],
+                                    day: DateFormat("dd-MM-YYYY").format(
+                                        DateTime.parse(task['startTimeISO'])),
+                                    description: task['description'],
+                                    startTime:
+                                        DateTime.parse(task['startTimeISO']),
+                                    endTime: DateTime.parse(task['endTimeISO']),
+                                    category: task['category'],
+                                  ),
+                                );
+                              }).toList(),
+                            )
                           : const Column(
-                        children: [
-                          SizedBox(height: 40,),
-                          Center(
-                            child: CircularProgressIndicator(
-                              valueColor: AlwaysStoppedAnimation<Color>(Colors.black26),
+                              children: [
+                                SizedBox(
+                                  height: 40,
+                                ),
+                                Center(
+                                  child: CircularProgressIndicator(
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        Colors.black26),
+                                  ),
+                                )
+                              ],
                             ),
-                          )
-                        ],
-                        ),
                     ],
                   ),
                 ),

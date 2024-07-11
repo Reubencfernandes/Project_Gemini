@@ -10,17 +10,16 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'pages/home_page.dart';
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await DatabaseService().init();
   await DatabaseService().readUsers();
   runApp(
     ChangeNotifierProvider(
-      create: (context)=> DatabaseService(),
+      create: (context) => DatabaseService(),
       child: const MyApp(),
     ),
   );
-
 }
 
 class MyApp extends StatelessWidget {
@@ -38,7 +37,7 @@ class MyApp extends StatelessWidget {
           "/home": (context) => const HomePage(),
           "/create": (context) => const CreateTaskPage(),
           "/tasks": (context) => const TasksPage(),
-          "/sign":(context) => const CreateAccount(),
+          "/sign": (context) => const CreateAccount(),
         },
       );
     });

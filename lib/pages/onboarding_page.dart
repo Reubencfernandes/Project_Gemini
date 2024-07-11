@@ -1,11 +1,6 @@
-
-import 'package:ayumi/entities/user.dart';
 import 'package:ayumi/pages/register.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-import 'package:sign_in_button/sign_in_button.dart';
-
-import '../services/database_service.dart';
 
 class OnboardingPage extends StatefulWidget {
   const OnboardingPage({super.key});
@@ -15,12 +10,6 @@ class OnboardingPage extends StatefulWidget {
 }
 
 class _OnboardingPageState extends State<OnboardingPage> {
-  @override
-  void initState()  {
-    super.initState();
-
-  }
-
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
@@ -66,9 +55,11 @@ class _OnboardingPageState extends State<OnboardingPage> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   padding: EdgeInsets.symmetric(
-                      vertical: 2.h, horizontal: 8.w)), // Adjusted for responsiveness
+                      vertical: 2.h,
+                      horizontal: 8.w)), // Adjusted for responsiveness
               onPressed: () {
-               Navigator.push(context, MaterialPageRoute(builder: (context)=>CreateAccount()));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => CreateAccount()));
               },
               child: Text(
                 "Get Started",
@@ -85,5 +76,4 @@ class _OnboardingPageState extends State<OnboardingPage> {
       ),
     );
   }
-
 }
