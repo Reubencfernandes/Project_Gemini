@@ -1,9 +1,6 @@
-
-import 'package:ayumi/entities/user.dart';
 import 'package:ayumi/entities/task.dart';
-import 'package:ayumi/pages/components/bottom_tab_navigation.dart';
+import 'package:ayumi/entities/user.dart';
 import 'package:ayumi/pages/components/my_badge.dart';
-import 'package:ayumi/pages/onboarding_page.dart';
 import 'package:ayumi/services/database_service.dart';
 import 'package:color_hash/color_hash.dart';
 import 'package:flutter/material.dart';
@@ -51,63 +48,81 @@ class HomePage extends StatelessWidget {
     double progressPercent = 0.0;
     if (currentTask != null) {
       progressPercent = 100 *
-          (DateTime.now().millisecondsSinceEpoch - currentTask.startTime.millisecondsSinceEpoch) /
-          (currentTask.endTime.millisecondsSinceEpoch - currentTask.startTime.millisecondsSinceEpoch);
+          (DateTime.now().millisecondsSinceEpoch -
+              currentTask.startTime.millisecondsSinceEpoch) /
+          (currentTask.endTime.millisecondsSinceEpoch -
+              currentTask.startTime.millisecondsSinceEpoch);
     }
 
     return [
-      const Text("Current Task", style: TextStyle(fontFamily: 'Inter', fontSize: 20, fontWeight: FontWeight.bold)),
+      const Text("Current Task",
+          style: TextStyle(
+              fontFamily: 'Inter', fontSize: 20, fontWeight: FontWeight.bold)),
       currentTask == null
-          ? const Text("No task right now.", style: TextStyle(fontFamily: 'Inter', fontSize: 14))
+          ? const Text("No task right now.",
+              style: TextStyle(fontFamily: 'Inter', fontSize: 14))
           : Card(
-        margin: const EdgeInsets.only(left: 5, right: 5, top: 10),
-        child: Padding(
-          padding: const EdgeInsets.only(top: 15, bottom: 30, left: 12, right: 12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              MyBadge(text: currentTask.category),
-              const SizedBox(height: 5),
-              Text(currentTask.title,
-                  style: const TextStyle(fontFamily: 'Inter', fontSize: 20, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(" Progress", style: TextStyle(fontFamily: 'Inter', color: Colors.grey[600])),
-                  Text("${progressPercent.toStringAsFixed(0)}%",
-                      style: const TextStyle(fontFamily: 'Inter', color: Colors.black, fontWeight: FontWeight.bold)),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 5),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10.0),
-                  child: LinearPercentIndicator(
-                    lineHeight: 15.0,
-                    percent: progressPercent / 100,
-                    progressColor: Colors.black,
-                    backgroundColor: Colors.grey[300],
-                    barRadius: const Radius.circular(10),
-                  ),
+              margin: const EdgeInsets.only(left: 5, right: 5, top: 10),
+              child: Padding(
+                padding: const EdgeInsets.only(
+                    top: 15, bottom: 30, left: 12, right: 12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    MyBadge(text: currentTask.category),
+                    const SizedBox(height: 5),
+                    Text(currentTask.title,
+                        style: const TextStyle(
+                            fontFamily: 'Inter',
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(" Progress",
+                            style: TextStyle(
+                                fontFamily: 'Inter', color: Colors.grey[600])),
+                        Text("${progressPercent.toStringAsFixed(0)}%",
+                            style: const TextStyle(
+                                fontFamily: 'Inter',
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold)),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 5),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10.0),
+                        child: LinearPercentIndicator(
+                          lineHeight: 15.0,
+                          percent: progressPercent / 100,
+                          progressColor: Colors.black,
+                          backgroundColor: Colors.grey[300],
+                          barRadius: const Radius.circular(10),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 15),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        const Icon(Icons.calendar_month, color: Colors.grey),
+                        Text(
+                          DateFormat('E, d MMM yyyy')
+                              .format(currentTask.endTime),
+                          style: TextStyle(
+                              fontFamily: 'Inter',
+                              color: Colors.grey[600],
+                              fontWeight: FontWeight.w600),
+                        )
+                      ],
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(height: 15),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  const Icon(Icons.calendar_month, color: Colors.grey),
-                  Text(
-                    DateFormat('E, d MMM yyyy').format(currentTask.endTime),
-                    style: TextStyle(fontFamily: 'Inter', color: Colors.grey[600], fontWeight: FontWeight.w600),
-                  )
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
+            ),
     ];
   }
 
@@ -126,36 +141,46 @@ class HomePage extends StatelessWidget {
     }
 
     return [
-      const Text("Analysis of Tasks", style: TextStyle(fontFamily: 'Inter', fontSize: 20, fontWeight: FontWeight.bold)),
-      Card(
-        margin: const EdgeInsets.only(left: 5, right: 5, top: 10),
-        child: Padding(
-          padding: const EdgeInsets.only(top: 15, bottom: 15, left: 12, right: 12),
-          child: PieChart(
-            dataMap: dataMap,
-            animationDuration: const Duration(milliseconds: 800),
-            colorList: colorList,
-            initialAngleInDegree: 0,
-            chartType: ChartType.disc,
-            ringStrokeWidth:32,
-            legendOptions: const LegendOptions(
-              showLegendsInRow: false,
-              legendPosition: LegendPosition.right,
-              showLegends: true,
-              legendShape: BoxShape.circle,
-              legendTextStyle: TextStyle(fontWeight: FontWeight.w400, fontFamily: 'Inter'),
-            ),
-            chartValuesOptions: const ChartValuesOptions(
-              showChartValueBackground: true,
-              showChartValues: true,
-              showChartValuesInPercentage: true,
-              showChartValuesOutside: false,
-              decimalPlaces: 1,
-            ),
-          ),
-        ),
-      )
-          /* const Text(
+      const Text("Analysis of Tasks",
+          style: TextStyle(
+              fontFamily: 'Inter', fontSize: 20, fontWeight: FontWeight.bold)),
+      // Check if empty
+      tasks.isEmpty
+          ? const Text(
+              "Add some tasks to see the analysis.",
+              style: TextStyle(fontFamily: 'Inter', fontSize: 14),
+            )
+          : Card(
+              margin: const EdgeInsets.only(left: 5, right: 5, top: 10),
+              child: Padding(
+                padding: const EdgeInsets.only(
+                    top: 15, bottom: 15, left: 12, right: 12),
+                child: PieChart(
+                  dataMap: dataMap,
+                  animationDuration: const Duration(milliseconds: 800),
+                  colorList: colorList,
+                  initialAngleInDegree: 0,
+                  chartType: ChartType.disc,
+                  ringStrokeWidth: 32,
+                  legendOptions: const LegendOptions(
+                    showLegendsInRow: false,
+                    legendPosition: LegendPosition.right,
+                    showLegends: true,
+                    legendShape: BoxShape.circle,
+                    legendTextStyle: TextStyle(
+                        fontWeight: FontWeight.w400, fontFamily: 'Inter'),
+                  ),
+                  chartValuesOptions: const ChartValuesOptions(
+                    showChartValueBackground: true,
+                    showChartValues: true,
+                    showChartValuesInPercentage: true,
+                    showChartValuesOutside: false,
+                    decimalPlaces: 1,
+                  ),
+                ),
+              ),
+            )
+      /* const Text(
         "Analysis of tasks couldn't be performed due to no tasks being saved.",
         style: TextStyle(
           fontFamily: 'Inter',
@@ -168,31 +193,44 @@ class HomePage extends StatelessWidget {
   double calculateYearProgress() {
     DateTime now = DateTime.now();
     int dayOfYear = int.parse(DateFormat('D').format(now));
-    bool isLeapYear = (now.year % 4 == 0 && now.year % 100 != 0) || now.year % 400 == 0;
+    bool isLeapYear =
+        (now.year % 4 == 0 && now.year % 100 != 0) || now.year % 400 == 0;
     int totalDaysInYear = isLeapYear ? 366 : 365;
     return 100 * dayOfYear / totalDaysInYear;
   }
 
   Widget buildProgressCard() {
-    double monthProgress = 100 * DateTime.now().day / DateUtils.getDaysInMonth(DateTime.now().year, DateTime.now().month);
+    double monthProgress = 100 *
+        DateTime.now().day /
+        DateUtils.getDaysInMonth(DateTime.now().year, DateTime.now().month);
     double yearProgress = calculateYearProgress();
 
     return Card(
       margin: const EdgeInsets.only(left: 5, right: 5, top: 10),
       child: Padding(
-        padding: const EdgeInsets.only(top: 15, bottom: 30, left: 12, right: 12),
+        padding:
+            const EdgeInsets.only(top: 15, bottom: 30, left: 12, right: 12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 5),
-            const Text("Progress", style: TextStyle(fontFamily: 'Inter', fontSize: 20, fontWeight: FontWeight.bold)),
+            const Text("Progress",
+                style: TextStyle(
+                    fontFamily: 'Inter',
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold)),
             const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("Month Progress", style: TextStyle(fontFamily: 'Inter', color: Colors.grey[600])),
+                Text("Month Progress",
+                    style: TextStyle(
+                        fontFamily: 'Inter', color: Colors.grey[600])),
                 Text("${monthProgress.toStringAsFixed(0)}%",
-                    style: const TextStyle(fontFamily: 'Inter', color: Colors.black, fontWeight: FontWeight.bold)),
+                    style: const TextStyle(
+                        fontFamily: 'Inter',
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold)),
               ],
             ),
             Padding(
@@ -213,9 +251,14 @@ class HomePage extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("Year Progress", style: TextStyle(fontFamily: 'Inter', color: Colors.grey[600])),
+                Text("Year Progress",
+                    style: TextStyle(
+                        fontFamily: 'Inter', color: Colors.grey[600])),
                 Text("${yearProgress.toStringAsFixed(0)}%",
-                    style: const TextStyle(fontFamily: 'Inter', color: Colors.black, fontWeight: FontWeight.bold)),
+                    style: const TextStyle(
+                        fontFamily: 'Inter',
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold)),
               ],
             ),
             Padding(
@@ -248,9 +291,8 @@ class WelcomeHeader extends StatefulWidget {
 
 class _WelcomeHeaderState extends State<WelcomeHeader> {
   @override
-  Widget build(BuildContext context)  {
-
-
+  Widget build(BuildContext context) {
+    User user = DatabaseService().users[0];
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -272,9 +314,13 @@ class _WelcomeHeaderState extends State<WelcomeHeader> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text("Hello,", style: TextStyle(fontFamily: 'Inter', color: Colors.black)),
-                Text(DatabaseService().readUsers().toString(),
-                    style: const TextStyle(fontFamily: 'Inter', fontSize: 20, fontWeight: FontWeight.bold)),
+                const Text("Hello,",
+                    style: TextStyle(fontFamily: 'Inter', color: Colors.black)),
+                Text(user.name,
+                    style: const TextStyle(
+                        fontFamily: 'Inter',
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold)),
               ],
             ),
           ],
@@ -287,9 +333,10 @@ class _WelcomeHeaderState extends State<WelcomeHeader> {
             showDialog(
               barrierDismissible: false,
               context: context,
-              builder: (BuildContext context)=> AlertDialog(
+              builder: (BuildContext context) => AlertDialog(
                 title: const Text('Do you wish to logout ?'),
-                content: const Text('On logging out all Data will be Cleared Stored on your Device'),
+                content: const Text(
+                    'On logging out all Data will be Cleared Stored on your Device'),
                 actions: <Widget>[
                   TextButton(
                     onPressed: () => Navigator.pop(context, 'Cancel'),
