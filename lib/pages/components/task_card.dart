@@ -4,10 +4,8 @@ import 'package:intl/intl.dart';
 
 import '../../entities/task.dart';
 
-class TaskCard extends StatelessWidget {
+class TaskCard extends StatefulWidget {
   final Task task;
-
-  static final _timeFormat = DateFormat("h:mm a");
 
   const TaskCard({
     super.key,
@@ -15,24 +13,30 @@ class TaskCard extends StatelessWidget {
   });
 
   @override
+  _TaskCardState createState() => _TaskCardState();
+}
+
+class _TaskCardState extends State<TaskCard> {
+  static final _timeFormat = DateFormat("h:mm a");
+
+  @override
   Widget build(BuildContext context) {
     String formattedTime =
-        "${_timeFormat.format(task.startTime)} - ${_timeFormat.format(task.endTime)}";
+        "${_timeFormat.format(widget.task.startTime)} - ${_timeFormat.format(widget.task.endTime)}";
 
     return Card(
       margin: const EdgeInsets.only(left: 5, right: 5, top: 10),
       child: Padding(
-        padding:
-            const EdgeInsets.only(top: 15, bottom: 15, left: 12, right: 12),
+        padding: const EdgeInsets.only(top: 15, bottom: 15, left: 12, right: 12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             MyBadge(
-              text: task.category,
+              text: widget.task.category,
             ),
             const SizedBox(height: 6),
             Text(
-              task.title,
+              widget.task.title,
               style: const TextStyle(
                 fontFamily: 'Inter',
                 fontSize: 20,
@@ -41,7 +45,7 @@ class TaskCard extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              task.description,
+              widget.task.description,
               style: const TextStyle(
                 fontFamily: 'Inter',
                 color: Colors.black,

@@ -26,10 +26,10 @@ class _NavigationBarState extends State<BottomTabNavigation> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[300],
-      body: IndexedStack(
+      body: _pageList[_selectedIndex],/*IndexedStack(
         children: _pageList,
         index: _selectedIndex,
-      ),
+      ),*/
       bottomNavigationBar: BottomNavigationBar(
         selectedLabelStyle: const TextStyle(fontSize: 15,color: Colors.black),
         unselectedLabelStyle: const TextStyle(fontSize: 15),

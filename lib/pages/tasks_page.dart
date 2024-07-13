@@ -20,7 +20,7 @@ class _TasksPageState extends State<TasksPage> {
   late String formattedTime = DateFormat('hh:mm a').format(now);
   late String formattedMonth = DateFormat('MMMM dd, yyyy').format(now);
   late DateTime selectedDate = DateTime.now();
-
+  late DateTime lastDate = DateTime(now.year, now.month + 1, now.day);
   @override
   void initState() {
     super.initState();
@@ -29,21 +29,24 @@ class _TasksPageState extends State<TasksPage> {
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: now,
+      initialDate: selectedDate,
       firstDate: now,
-      lastDate: DateTime(now.year, now.month + 1, now.day),
-      builder: (BuildContext context,Widget? child)
-        {
-          return Theme(data: ThemeData.light().copyWith(
-colorScheme: const ColorScheme.light(
-  primary: Colors.black87,
-)
-          ), child:child!);
-        }
+      lastDate: lastDate,
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: ThemeData.light().copyWith(
+            colorScheme: const ColorScheme.light(
+              primary: Colors.black87,
+            ),
+          ),
+          child: child!,
+        );
+      },
     );
     if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
+        formattedMonth = DateFormat('MMMM dd, yyyy').format(selectedDate);
       });
     }
   }

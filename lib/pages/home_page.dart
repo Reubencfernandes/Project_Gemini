@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:ayumi/entities/task.dart';
 import 'package:ayumi/entities/user.dart';
 import 'package:ayumi/pages/components/my_badge.dart';
@@ -8,9 +10,14 @@ import 'package:intl/intl.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:pie_chart/pie_chart.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,7 +35,22 @@ class HomePage extends StatelessWidget {
                     children: [
                       ...buildCurrentTask(),
                       const SizedBox(height: 30),
-                      ...buildAnalysisOfTasks(),
+                      FutureBuilder<List<Widget>>(
+                  future: buildAnalysisOfTasks(),
+                  builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                  return const  Text("Error Occurred");
+                  } else if (snapshot.hasData) {
+                  return     Column(
+                    crossAxisAlignment: CrossAxisAlignment.start, // Align to start
+                    children: snapshot.data ?? [],
+                  );
+                  } else {
+                  return const Text("No data available");
+                  }
+                  }),
                       const SizedBox(height: 20),
                       buildProgressCard(),
                       const SizedBox(height: 10),
@@ -60,78 +82,82 @@ class HomePage extends StatelessWidget {
               fontFamily: 'Inter', fontSize: 20, fontWeight: FontWeight.bold)),
       currentTask == null
           ? const Text("No task right now.",
-              style: TextStyle(fontFamily: 'Inter', fontSize: 14))
+          style: TextStyle(fontFamily: 'Inter'
+          ))
           : Card(
-              margin: const EdgeInsets.only(left: 5, right: 5, top: 10),
-              child: Padding(
-                padding: const EdgeInsets.only(
-                    top: 15, bottom: 30, left: 12, right: 12),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    MyBadge(text: currentTask.category),
-                    const SizedBox(height: 5),
-                    Text(currentTask.title,
-                        style: const TextStyle(
-                            fontFamily: 'Inter',
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold)),
-                    const SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(" Progress",
-                            style: TextStyle(
-                                fontFamily: 'Inter', color: Colors.grey[600])),
-                        Text("${progressPercent.toStringAsFixed(0)}%",
-                            style: const TextStyle(
-                                fontFamily: 'Inter',
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold)),
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 5),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(10.0),
-                        child: LinearPercentIndicator(
-                          lineHeight: 15.0,
-                          percent: progressPercent / 100,
-                          progressColor: Colors.black,
-                          backgroundColor: Colors.grey[300],
-                          barRadius: const Radius.circular(10),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 15),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        const Icon(Icons.calendar_month, color: Colors.grey),
-                        Text(
-                          DateFormat('E, d MMM yyyy')
-                              .format(currentTask.endTime),
-                          style: TextStyle(
-                              fontFamily: 'Inter',
-                              color: Colors.grey[600],
-                              fontWeight: FontWeight.w600),
-                        )
-                      ],
-                    ),
-                  ],
+        margin: const EdgeInsets.only(left: 5, right: 5, top: 10),
+        child: Padding(
+          padding: const EdgeInsets.only(
+              top: 15, bottom: 30, left: 12, right: 12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              MyBadge(text: currentTask.category),
+              const SizedBox(height: 5),
+              Text(currentTask.title,
+                  style: const TextStyle(
+                      fontFamily: 'Inter',
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold)),
+              const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(" Progress",
+                      style: TextStyle(
+                          fontFamily: 'Inter', color: Colors.grey[600])),
+                  Text("${progressPercent.toStringAsFixed(0)}%",
+                      style: const TextStyle(
+                          fontFamily: 'Inter',
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold)),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 5),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10.0),
+                  child: LinearPercentIndicator(
+                    lineHeight: 15.0,
+                    percent: progressPercent / 100,
+                    progressColor: Colors.black,
+                    backgroundColor: Colors.grey[300],
+                    barRadius: const Radius.circular(10),
+                  ),
                 ),
               ),
-            ),
+              const SizedBox(height: 15),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  const Icon(Icons.calendar_month, color: Colors.grey),
+                  Text(
+                    DateFormat('E, d MMM yyyy')
+                        .format(currentTask.endTime),
+                    style: TextStyle(
+                        fontFamily: 'Inter',
+                        color: Colors.grey[600],
+                        fontWeight: FontWeight.w600),
+                  )
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
     ];
   }
 
-  List<Widget> buildAnalysisOfTasks() {
+  Future<List<Widget>> buildAnalysisOfTasks()  async {
+    await DatabaseService().readTasks();
     List<Task> tasks = DatabaseService().tasks;
+    print(tasks);
     Map<String, double> dataMap = {};
     List<Color> colorList = [];
 
     for (var task in tasks) {
+      print(task);
       if (dataMap.containsKey(task.category)) {
         dataMap[task.category] = dataMap[task.category]! + 1;
       } else {
@@ -144,49 +170,38 @@ class HomePage extends StatelessWidget {
       const Text("Analysis of Tasks",
           style: TextStyle(
               fontFamily: 'Inter', fontSize: 20, fontWeight: FontWeight.bold)),
-      // Check if empty
-      tasks.isEmpty
-          ? const Text(
-              "Add some tasks to see the analysis.",
-              style: TextStyle(fontFamily: 'Inter', fontSize: 14),
-            )
-          : Card(
-              margin: const EdgeInsets.only(left: 5, right: 5, top: 10),
-              child: Padding(
-                padding: const EdgeInsets.only(
-                    top: 15, bottom: 15, left: 12, right: 12),
-                child: PieChart(
-                  dataMap: dataMap,
-                  animationDuration: const Duration(milliseconds: 800),
-                  colorList: colorList,
-                  initialAngleInDegree: 0,
-                  chartType: ChartType.disc,
-                  ringStrokeWidth: 32,
-                  legendOptions: const LegendOptions(
-                    showLegendsInRow: false,
-                    legendPosition: LegendPosition.right,
-                    showLegends: true,
-                    legendShape: BoxShape.circle,
-                    legendTextStyle: TextStyle(
-                        fontWeight: FontWeight.w400, fontFamily: 'Inter'),
-                  ),
-                  chartValuesOptions: const ChartValuesOptions(
-                    showChartValueBackground: true,
-                    showChartValues: true,
-                    showChartValuesInPercentage: true,
-                    showChartValuesOutside: false,
-                    decimalPlaces: 1,
-                  ),
-                ),
-              ),
-            )
-      /* const Text(
-        "Analysis of tasks couldn't be performed due to no tasks being saved.",
-        style: TextStyle(
-          fontFamily: 'Inter',
-          fontWeight: FontWeight.w500,
+       dataMap.isEmpty ? const Text("No task right now.",
+           style: TextStyle(fontFamily: 'Inter'
+           )) :Card(
+        margin: const EdgeInsets.only(left: 5, right: 5, top: 10),
+        child: Padding(
+          padding: const EdgeInsets.only(
+              top: 15, bottom: 15, left: 12, right: 12),
+          child: PieChart(
+            dataMap: dataMap,
+            animationDuration: const Duration(milliseconds: 800),
+            colorList: colorList,
+            initialAngleInDegree: 0,
+            chartType: ChartType.disc,
+            ringStrokeWidth: 32,
+            legendOptions: const LegendOptions(
+              showLegendsInRow: false,
+              legendPosition: LegendPosition.right,
+              showLegends: true,
+              legendShape: BoxShape.circle,
+              legendTextStyle: TextStyle(
+                  fontWeight: FontWeight.w400, fontFamily: 'Inter'),
+            ),
+            chartValuesOptions: const ChartValuesOptions(
+              showChartValueBackground: true,
+              showChartValues: true,
+              showChartValuesInPercentage: true,
+              showChartValuesOutside: false,
+              decimalPlaces: 1,
+            ),
+          ),
         ),
-      ),*/
+      )
     ];
   }
 
@@ -209,7 +224,7 @@ class HomePage extends StatelessWidget {
       margin: const EdgeInsets.only(left: 5, right: 5, top: 10),
       child: Padding(
         padding:
-            const EdgeInsets.only(top: 15, bottom: 30, left: 12, right: 12),
+        const EdgeInsets.only(top: 15, bottom: 30, left: 12, right: 12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -343,7 +358,12 @@ class _WelcomeHeaderState extends State<WelcomeHeader> {
                     child: const Text('Cancel'),
                   ),
                   TextButton(
-                    onPressed: () => Navigator.pop(context, 'OK'),
+                    onPressed: () async  {
+                      Navigator.of(context).pop();
+                      await DatabaseService().wipeEverything();
+                      exit(0);
+            },
+
                     child: const Text('OK'),
                   ),
                 ],

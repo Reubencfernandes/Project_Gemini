@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
+import 'entities/user.dart';
 import 'pages/home_page.dart';
 
 void main() async {
@@ -27,11 +28,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List user = DatabaseService().users;
     return ResponsiveSizer(builder: (context, orientation, screentype) {
-      return MaterialApp(
+            return MaterialApp(
         title: "Project Gemini",
         debugShowCheckedModeBanner: false,
-        home: const OnboardingPage(),
+        home:  user.isEmpty ? OnboardingPage() : BottomTabNavigation(),
         routes: {
           "/navigate": (context) => const BottomTabNavigation(),
           "/home": (context) => const HomePage(),

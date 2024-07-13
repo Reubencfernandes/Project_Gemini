@@ -101,4 +101,9 @@ class DatabaseService extends ChangeNotifier {
     });
     readUsers();
   }
+  Future<void> wipeEverything() async{
+    await _isar.writeTxn(() async{
+      await _isar.clear();
+    });
+  }
 }

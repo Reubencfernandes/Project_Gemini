@@ -84,7 +84,7 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
     try {
       final response = await model.generateContent([
         Content.text(
-            '$promptStart Today\'s date is $todayDate. $textDescription')
+            '$promptStart Today\'s date is $formattedMonth. $textDescription')
       ]);
 
       if (response.text == null) {
