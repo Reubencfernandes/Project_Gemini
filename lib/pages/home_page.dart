@@ -36,21 +36,22 @@ class _HomePageState extends State<HomePage> {
                       ...buildCurrentTask(),
                       const SizedBox(height: 30),
                       FutureBuilder<List<Widget>>(
-                  future: buildAnalysisOfTasks(),
-                  builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasError) {
-                  return const  Text("Error Occurred");
-                  } else if (snapshot.hasData) {
-                  return     Column(
-                    crossAxisAlignment: CrossAxisAlignment.start, // Align to start
-                    children: snapshot.data ?? [],
-                  );
-                  } else {
-                  return const Text("No data available");
-                  }
-                  }),
+                        future: buildAnalysisOfTasks(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return const Center(child: CircularProgressIndicator());
+                          } else if (snapshot.hasError) {
+                            return const Text("Error Occurred");
+                          } else if (snapshot.hasData) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: snapshot.data ?? [],
+                            );
+                          } else {
+                            return const Text("No data available");
+                          }
+                        },
+                      ),
                       const SizedBox(height: 20),
                       buildProgressCard(),
                       const SizedBox(height: 10),
@@ -82,8 +83,7 @@ class _HomePageState extends State<HomePage> {
               fontFamily: 'Inter', fontSize: 20, fontWeight: FontWeight.bold)),
       currentTask == null
           ? const Text("No task right now.",
-          style: TextStyle(fontFamily: 'Inter'
-          ))
+          style: TextStyle(fontFamily: 'Inter'))
           : Card(
         margin: const EdgeInsets.only(left: 5, right: 5, top: 10),
         child: Padding(
@@ -133,8 +133,7 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   const Icon(Icons.calendar_month, color: Colors.grey),
                   Text(
-                    DateFormat('E, d MMM yyyy')
-                        .format(currentTask.endTime),
+                    DateFormat('E, d MMM yyyy').format(currentTask.endTime),
                     style: TextStyle(
                         fontFamily: 'Inter',
                         color: Colors.grey[600],
@@ -149,15 +148,13 @@ class _HomePageState extends State<HomePage> {
     ];
   }
 
-  Future<List<Widget>> buildAnalysisOfTasks()  async {
+  Future<List<Widget>> buildAnalysisOfTasks() async {
     await DatabaseService().readTasks();
     List<Task> tasks = DatabaseService().tasks;
-    print(tasks);
     Map<String, double> dataMap = {};
     List<Color> colorList = [];
 
     for (var task in tasks) {
-      print(task);
       if (dataMap.containsKey(task.category)) {
         dataMap[task.category] = dataMap[task.category]! + 1;
       } else {
@@ -170,9 +167,10 @@ class _HomePageState extends State<HomePage> {
       const Text("Analysis of Tasks",
           style: TextStyle(
               fontFamily: 'Inter', fontSize: 20, fontWeight: FontWeight.bold)),
-       dataMap.isEmpty ? const Text("No task right now.",
-           style: TextStyle(fontFamily: 'Inter'
-           )) :Card(
+      dataMap.isEmpty
+          ? const Text("No task right now.",
+          style: TextStyle(fontFamily: 'Inter'))
+          : Card(
         margin: const EdgeInsets.only(left: 5, right: 5, top: 10),
         child: Padding(
           padding: const EdgeInsets.only(
@@ -305,74 +303,90 @@ class WelcomeHeader extends StatefulWidget {
 }
 
 class _WelcomeHeaderState extends State<WelcomeHeader> {
+  Future<String> _fetchUserName() async {
+    await Future.delayed(const Duration(seconds: 1)); // Simulating a delay
+    return DatabaseService().users[0].name;
+  }
+
   @override
   Widget build(BuildContext context) {
-    User user = DatabaseService().users[0];
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(50.0),
-              child: Image.network(
-                "https://yt3.ggpht.com/ytc/AIdro_lG10P4m8LYfMtwEO1KRLthQrqWR2aDuGEAi4TVCVbJsJc=s48-c-k-c0x00ffffff-no-rj",
-                width: 50,
-                height: 50,
-                fit: BoxFit.cover,
-              ),
-            ),
-            const SizedBox(width: 10),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text("Hello,",
-                    style: TextStyle(fontFamily: 'Inter', color: Colors.black)),
-                Text(user.name,
-                    style: const TextStyle(
-                        fontFamily: 'Inter',
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold)),
-              ],
-            ),
-          ],
-        ),
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            padding: const EdgeInsets.all(20),
-          ),
-          onPressed: () async {
-            showDialog(
-              barrierDismissible: false,
-              context: context,
-              builder: (BuildContext context) => AlertDialog(
-                title: const Text('Do you wish to logout ?'),
-                content: const Text(
-                    'On logging out all Data will be Cleared Stored on your Device'),
-                actions: <Widget>[
-                  TextButton(
-                    onPressed: () => Navigator.pop(context, 'Cancel'),
-                    child: const Text('Cancel'),
+    return FutureBuilder<String>(
+      future: _fetchUserName(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          return const Text('Error loading user name');
+        } else if (snapshot.hasData) {
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(50.0),
+                    child: Image.network(
+                      "https://yt3.ggpht.com/ytc/AIdro_lG10P4m8LYfMtwEO1KRLthQrqWR2aDuGEAi4TVCVbJsJc=s48-c-k-c0x00ffffff-no-rj",
+                      width: 50,
+                      height: 50,
+                      fit: BoxFit.cover,
+                    ),
                   ),
-                  TextButton(
-                    onPressed: () async  {
-                      Navigator.of(context).pop();
-                      await DatabaseService().wipeEverything();
-                      exit(0);
-            },
-
-                    child: const Text('OK'),
+                  const SizedBox(width: 10),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text("Hello,",
+                          style:
+                          TextStyle(fontFamily: 'Inter', color: Colors.black)),
+                      Text(snapshot.data!,
+                          style: const TextStyle(
+                              fontFamily: 'Inter',
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold)),
+                    ],
                   ),
                 ],
               ),
-            );
-          },
-          child: const Icon(Icons.logout, color: Colors.black),
-        ),
-      ],
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.all(20),
+                ),
+                onPressed: () async {
+                  showDialog(
+                    barrierDismissible: false,
+                    context: context,
+                    builder: (BuildContext context) => AlertDialog(
+                      title: const Text('Do you wish to logout ?'),
+                      content: const Text(
+                          'On logging out all Data will be Cleared Stored on your Device'),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, 'Cancel'),
+                          child: const Text('Cancel'),
+                        ),
+                        TextButton(
+                          onPressed: () async {
+                            Navigator.of(context).pop();
+                            await DatabaseService().wipeEverything();
+                            exit(0);
+                          },
+                          child: const Text('OK'),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+                child: const Icon(Icons.logout, color: Colors.black),
+              ),
+            ],
+          );
+        } else {
+          return const Text('No user data');
+        }
+      },
     );
   }
 }
