@@ -32,11 +32,13 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
   final model = GenerativeModel(
       model: 'gemini-1.5-flash',
       apiKey:
-          'AIzaSyAzwL_9gB9jeWZEn13l88MjhySTEj4Pa8M'); // Replace with your actual API key
+      'AIzaSyAzwL_9gB9jeWZEn13l88MjhySTEj4Pa8M'); // Replace with your actual API key
   DateTime now = DateTime.now().toUtc();
   DateTime selectedDate = DateTime.now().toUtc();
   TextEditingController description = TextEditingController();
   List<dynamic> tasksForToday = [];
+  TextEditingController startTimeController = TextEditingController();
+  TextEditingController endTimeController = TextEditingController();
 
   @override
   void initState() {
@@ -44,6 +46,10 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
     lastDate = DateTime(now.year, now.month + 1, now.day);
     formattedMonth = DateFormat('MMMM dd, yyyy').format(selectedDate);
     description.text = '';
+    startTime = const TimeOfDay(hour: 9, minute: 0); // Initial start time
+    endTime = const TimeOfDay(hour: 17, minute: 0); // Initial end time
+    startTimeController.text = startTime.format(context);
+    endTimeController.text = endTime.format(context);
   }
 
   void alwayschange() {
@@ -51,6 +57,7 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
       isGenerate = !isGenerate;
     });
   }
+
   Future<void> changeStartTime(BuildContext context) async {
     final TimeOfDay? picked = await showTimePicker(
       context: context,
@@ -59,6 +66,7 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
     if (picked != null && picked != startTime) {
       setState(() {
         startTime = picked;
+        startTimeController.text = startTime.format(context);
       });
     }
   }
@@ -71,6 +79,7 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
     if (picked != null && picked != endTime) {
       setState(() {
         endTime = picked;
+        endTimeController.text = endTime.format(context);
       });
     }
   }
@@ -144,93 +153,107 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
     print("IM BLUE DA DA DE DA DU");
   }
 
-  Future editTask(Task task,int index) {
+  Future editTask(Task task, int index) {
     TextEditingController title = TextEditingController();
     TextEditingController description = TextEditingController();
     title.text = task.title;
     description.text = task.description;
-    setState(() {
-      tasksForToday.elementAtOrNull(index)['title'] = 'hhu';
-    });
+
     startTime = TimeOfDay.fromDateTime(task.startTime);
     endTime = TimeOfDay.fromDateTime(task.endTime);
+    startTimeController.text = startTime.format(context);
+    endTimeController.text = endTime.format(context);
+
     print(task.title);
     print("MAE HA HI MAE HA HU MAE YO NUMA NUMA EH");
+
     return showModalBottomSheet(
         context: context,
         builder: (BuildContext context) {
           return Container(
-
-            margin: EdgeInsets.only(top: 20,bottom: 60,left: 30,right: 30),
+            margin: const EdgeInsets.only(top: 50, bottom: 50, left: 30, right: 30),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Enter Title"),
                 TextField(
                   controller: title,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     fillColor: Colors.white,
                     filled: true,
+                    border: OutlineInputBorder(),
+                    labelText: "Enter Title",
                   ),
                 ),
-                SizedBox(height: 10,),
-                Text("Enter Description"),
                 TextField(
-                    controller: description,
-                    maxLines: 2,
-                    decoration: InputDecoration(
-                      fillColor: Colors.white,
-                      filled: true,
-                    )),
-                SizedBox(height: 10,),
-                Text("Enter start time"),
+                  controller: description,
+                  maxLines: 2,
+                  decoration: const InputDecoration(
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(),
+                    filled: true,
+                    labelText: "Enter Description",
+                  ),
+                ),
                 TextField(
+                  controller: startTimeController,
                   onTap: () => changeStartTime(context),
                   readOnly: true,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
                     fillColor: Colors.white,
+                    border: OutlineInputBorder(),
                     filled: true,
-                    hintText: startTime.toString(),
+                    labelText: "Enter Start Time",
                   ),
                 ),
-                SizedBox(height: 10,),
-                Text("Enter End Time"),
                 TextField(
+                  controller: endTimeController,
                   onTap: () => changeEndTime(context),
                   readOnly: true,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
                     fillColor: Colors.white,
+                    border: OutlineInputBorder(),
+                    labelText: "Enter End Time",
                     filled: true,
-                    hintText: endTime.toString(),
                   ),
                 ),
-                SizedBox(height: 10,),
                 ElevatedButton(
                     onPressed: () {
-
+                      setState(() {
+                        tasksForToday[index]['title'] = title.text;
+                        tasksForToday[index]['description'] = description.text;
+                        tasksForToday[index]['startTimeISO'] = convertTimeOfDayToDateTime(selectedDate, startTime).toIso8601String();
+                        tasksForToday[index]['endTimeISO'] = convertTimeOfDayToDateTime(selectedDate, endTime).toIso8601String();
+                      });
+                      Navigator.pop(context);
                     },
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.red,
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10))),
+                            borderRadius: BorderRadius.circular(7))),
                     child: const Text(
                       "Save",
                       style: TextStyle(
                         color: Colors.white,
                         fontFamily: 'Bebas Neue',
-                        fontSize: 20,
-                      ))),
+                        fontSize: 23,
+                      ),
+                    )),
               ],
             ),
           );
         });
   }
 
+  DateTime convertTimeOfDayToDateTime(DateTime date, TimeOfDay time) {
+    return DateTime(date.year, date.month, date.day, time.hour, time.minute);
+  }
+
   void _showError(String message) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content:
-          Text(message, style: TextStyle(fontFamily: 'Inter', fontSize: 15)),
+      content: Text(message, style: const TextStyle(fontFamily: 'Inter', fontSize: 15)),
       backgroundColor: Colors.red,
     ));
   }
@@ -332,12 +355,13 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
                       const SizedBox(height: 10),
                       TextField(
                         controller: description,
+                        cursorColor: Colors.black87,
                         decoration: const InputDecoration(
                           fillColor: Colors.white,
                           border: InputBorder.none,
                           filled: true,
                           hintText:
-                              'I wake up at 6:00 AM, attend church from 6:30 to 7:00 AM, and then eat breakfast at home. After that, I prepare for college and arrive at 9:00 AM. I return home at 5:30 PM, watch "My Hero Academia" on TV, study afterward, and go to sleep at 11:00 PM.',
+                          'I wake up at 6:00 AM, attend church from 6:30 to 7:00 AM, and then eat breakfast at home. After that, I prepare for college and arrive at 9:00 AM. I return home at 5:30 PM, watch "My Hero Academia" on TV, study afterward, and go to sleep at 11:00 PM.',
                         ),
                         maxLines: 8,
                       ),
@@ -408,48 +432,53 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
                       ),
                       isGenerate
                           ? Column(
-                              children:
-                                  tasksForToday.asMap().entries.map((entry) {
-                                int index = entry.key;
-                                var task = entry.value;
-                                return CreateTaskCard(
-                                  task: Task(
-                                    title: task['title'],
-                                    day: DateFormat("dd-MM-yyyy").format(
-                                        DateTime.parse(task['startTimeISO'])),
-                                    description: task['description'],
-                                    startTime:
-                                        DateTime.parse(task['startTimeISO']),
-                                    endTime: DateTime.parse(task['endTimeISO']),
-                                    category: task['category'],
-                                  ),
-                                  onDelete: () => deleteTask(index),
-                                  onEdit: () => editTask(Task(
-                                    title: task['title'],
-                                    day: DateFormat("dd-MM-yyyy").format(
-                                        DateTime.parse(task['startTimeISO'])),
-                                    description: task['description'],
-                                    startTime:
-                                        DateTime.parse(task['startTimeISO']),
-                                    endTime: DateTime.parse(task['endTimeISO']),
-                                    category: task['category'],
-                                  ),index),
-                                );
-                              }).toList(),
-                            )
-                          : const Column(
-                              children: [
-                                SizedBox(
-                                  height: 40,
-                                ),
-                                Center(
-                                  child: CircularProgressIndicator(
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                        Colors.black26),
-                                  ),
-                                )
-                              ],
+                        children:
+                        tasksForToday.asMap().entries.map((entry) {
+                          int index = entry.key;
+                          var task = entry.value;
+                          return CreateTaskCard(
+                            task: Task(
+                              title: task['title'],
+                              day: DateFormat("dd-MM-yyyy").format(
+                                  DateTime.parse(task['startTimeISO'])),
+                              description: task['description'],
+                              startTime:
+                              DateTime.parse(task['startTimeISO']),
+                              endTime: DateTime.parse(task['endTimeISO']),
+                              category: task['category'],
                             ),
+                            onDelete: () => deleteTask(index),
+                            onEdit: () => editTask(
+                              Task(
+                                title: task['title'],
+                                day: DateFormat("dd-MM-yyyy").format(
+                                    DateTime.parse(
+                                        task['startTimeISO'])),
+                                description: task['description'],
+                                startTime: DateTime.parse(
+                                    task['startTimeISO']),
+                                endTime: DateTime.parse(
+                                    task['endTimeISO']),
+                                category: task['category'],
+                              ),
+                              index,
+                            ),
+                          );
+                        }).toList(),
+                      )
+                          : const Column(
+                        children: [
+                          SizedBox(
+                            height: 40,
+                          ),
+                          Center(
+                            child: CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                  Colors.black26),
+                            ),
+                          )
+                        ],
+                      ),
                     ],
                   ),
                 ),

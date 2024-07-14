@@ -42,12 +42,13 @@ class _CreateTaskCardState extends State<CreateTaskCard> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    ElevatedButton(onPressed: widget.onEdit // will call onEdit on CreateTaskPage
-                    , child: Icon(Icons.edit_calendar,color: Colors.blue,)),
-                    SizedBox(width: 5,),
-                    ElevatedButton(onPressed: widget.onDelete
+                    ElevatedButton(onPressed: widget.onEdit,style: ElevatedButton.styleFrom(backgroundColor: Colors.transparent,
+                      elevation: 0,) // will call onEdit on CreateTaskPage
+                    , child: Icon(Icons.edit_calendar,color: Colors.grey[800],)),
+                    ElevatedButton(onPressed: widget.onDelete,style: ElevatedButton.styleFrom(backgroundColor: Colors.transparent,
+                      elevation: 0,)
                         // will call delete in CreateTaskPage
-                    , child: Icon(Icons.delete,color: Colors.redAccent,)),
+                    , child: Icon(Icons.delete_forever,color: Colors.grey[800],)),
                   ],
                 )
               ],

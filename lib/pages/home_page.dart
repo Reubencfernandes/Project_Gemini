@@ -359,13 +359,13 @@ class _WelcomeHeaderState extends State<WelcomeHeader> {
                     barrierDismissible: false,
                     context: context,
                     builder: (BuildContext context) => AlertDialog(
-                      title: const Text('Do you wish to logout ?'),
+                      title: const Text('are you sure you want to logout?',style: TextStyle(fontFamily: 'Bebas Neue'),),
                       content: const Text(
-                          'On logging out all Data will be Cleared Stored on your Device'),
+                          'On clicking Ok all Data Stored will be Deleted including your profile name',style: TextStyle(fontFamily: 'Inter'),),
                       actions: <Widget>[
                         TextButton(
                           onPressed: () => Navigator.pop(context, 'Cancel'),
-                          child: const Text('Cancel'),
+                          child: const Text('Cancel' ,style: TextStyle(color: Colors.red),),
                         ),
                         TextButton(
                           onPressed: () async {
@@ -373,7 +373,7 @@ class _WelcomeHeaderState extends State<WelcomeHeader> {
                             await DatabaseService().wipeEverything();
                             exit(0);
                           },
-                          child: const Text('OK'),
+                          child: const Text('OK',style: TextStyle(color: Colors.blue),),
                         ),
                       ],
                     ),
