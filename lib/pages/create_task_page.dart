@@ -6,7 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animated_button/flutter_animated_button.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:intl/intl.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
+import 'components/create_task_card.dart';
 import 'components/task_card.dart';
 
 const String promptStart =
@@ -77,7 +79,7 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
     alwayschange();
     String textDescription = description.text.isNotEmpty
         ? description.text
-        : 'I wake up at 6:30 AM, go for a jog, have breakfast at 7:30 AM, attend online classes from 8:30 AM to 12:30 PM. In the afternoon I work on my side coding projects, finally at 6PM I go to the gym.';
+        : 'I wake up at 6:00 AM, attend church from 6:30 to 7:00 AM, and then eat breakfast at home. After that, I prepare for college and arrive at 9:00 AM. I return home at 5:30 PM, watch "My Hero Academia" on TV, study afterward, and go to sleep at 11:00 PM.';
 
     String todayDate = DateTime.now().toIso8601String();
 
@@ -108,6 +110,70 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
     } catch (e) {
       _showError('Error generating tasks: $e');
     }
+  }
+
+  void deleteTask(int index) {
+    setState(() {
+      tasksForToday.removeAt(index);
+    });
+    print("IM BLUE DA DA DE DA DU");
+  }
+
+  Future editTask(Task task) {
+    TextEditingController title = TextEditingController();
+    TextEditingController description = TextEditingController();
+    title.text = task.title;
+    description.text = task.description;
+    print(task.title);
+    print("MAE HA HI MAE HA HU MAE YO NUMA NUMA EH");
+    return showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) {
+          return Container(
+            height: 500.h,
+            margin: EdgeInsets.all(50),
+            child: Column(
+              children: [
+                TextField(
+                  controller: title,
+                  decoration: InputDecoration(
+                    fillColor: Colors.white,
+                    filled: true,
+                  ),
+                ),
+                TextField(
+                    controller: description,
+                    decoration: InputDecoration(
+                      fillColor: Colors.white,
+                      filled: true,
+                    )),
+                TextField(
+                  onTap: () => _selectDate(context),
+                  readOnly: true,
+                  decoration: InputDecoration(
+                    fillColor: Colors.white,
+                    filled: true,
+                    hintText: formattedMonth,
+                  ),
+                ),
+                ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10))),
+                    child: Text(
+                      "Save",
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontFamily: 'Bebas Neue',
+                        fontSize: 20,
+                      ),
+                    ))
+              ],
+            ),
+          );
+        });
   }
 
   void _showError(String message) {
@@ -220,7 +286,7 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
                           border: InputBorder.none,
                           filled: true,
                           hintText:
-                              'I wake up at 6:30 AM, go for a jog, have breakfast at 7:30 AM, attend online classes from 8:30 AM to 12:30 PM, and spend the afternoon working on projects.',
+                              'I wake up at 6:00 AM, attend church from 6:30 to 7:00 AM, and then eat breakfast at home. After that, I prepare for college and arrive at 9:00 AM. I return home at 5:30 PM, watch "My Hero Academia" on TV, study afterward, and go to sleep at 11:00 PM.',
                         ),
                         maxLines: 8,
                       ),
@@ -291,11 +357,14 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
                       ),
                       isGenerate
                           ? Column(
-                              children: tasksForToday.map((task) {
-                                return TaskCard(
+                              children:
+                                  tasksForToday.asMap().entries.map((entry) {
+                                int index = entry.key;
+                                var task = entry.value;
+                                return CreateTaskCard(
                                   task: Task(
                                     title: task['title'],
-                                    day: DateFormat("dd-MM-YYYY").format(
+                                    day: DateFormat("dd-MM-yyyy").format(
                                         DateTime.parse(task['startTimeISO'])),
                                     description: task['description'],
                                     startTime:
@@ -303,6 +372,17 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
                                     endTime: DateTime.parse(task['endTimeISO']),
                                     category: task['category'],
                                   ),
+                                  onDelete: () => deleteTask(index),
+                                  onEdit: () => editTask(Task(
+                                    title: task['title'],
+                                    day: DateFormat("dd-MM-yyyy").format(
+                                        DateTime.parse(task['startTimeISO'])),
+                                    description: task['description'],
+                                    startTime:
+                                        DateTime.parse(task['startTimeISO']),
+                                    endTime: DateTime.parse(task['endTimeISO']),
+                                    category: task['category'],
+                                  )),
                                 );
                               }).toList(),
                             )

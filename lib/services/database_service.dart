@@ -54,9 +54,9 @@ class DatabaseService extends ChangeNotifier {
 
   Future<void> addTask(Task newTask) async {
     await _isar.writeTxn(() async {
-      final existingTask = await _isar.tasks.filter().dayEqualTo(newTask.day).findAll();
-      print(existingTask);
-      await _isar.tasks.deleteAll(existingTask.map((t)=>t.id!).toList());
+
+
+      //await _isar.tasks.filter().day(newTask.startTime,newTask.endTime).deleteAll();
       await _isar.tasks.put(newTask);
     });
     readTasks();
