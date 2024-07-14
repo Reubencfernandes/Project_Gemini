@@ -26,6 +26,8 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
   late DateTime lastDate;
   late String formattedMonth;
   Color buttonColor = Colors.red;
+  late TimeOfDay startTime;
+  late TimeOfDay endTime;
   List<dynamic> jsonData = [];
   final model = GenerativeModel(
       model: 'gemini-1.5-flash',
@@ -48,6 +50,29 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
     setState(() {
       isGenerate = !isGenerate;
     });
+  }
+  Future<void> changeStartTime(BuildContext context) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: startTime,
+    );
+    if (picked != null && picked != startTime) {
+      setState(() {
+        startTime = picked;
+      });
+    }
+  }
+
+  Future<void> changeEndTime(BuildContext context) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: endTime,
+    );
+    if (picked != null && picked != endTime) {
+      setState(() {
+        endTime = picked;
+      });
+    }
   }
 
   Future<void> _selectDate(BuildContext context) async {
@@ -119,21 +144,29 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
     print("IM BLUE DA DA DE DA DU");
   }
 
-  Future editTask(Task task) {
+  Future editTask(Task task,int index) {
     TextEditingController title = TextEditingController();
     TextEditingController description = TextEditingController();
     title.text = task.title;
     description.text = task.description;
+    setState(() {
+      tasksForToday.elementAtOrNull(index)['title'] = 'hhu';
+    });
+    startTime = TimeOfDay.fromDateTime(task.startTime);
+    endTime = TimeOfDay.fromDateTime(task.endTime);
     print(task.title);
     print("MAE HA HI MAE HA HU MAE YO NUMA NUMA EH");
     return showModalBottomSheet(
         context: context,
         builder: (BuildContext context) {
           return Container(
-            height: 500.h,
-            margin: EdgeInsets.all(50),
+
+            margin: EdgeInsets.only(top: 20,bottom: 60,left: 30,right: 30),
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Text("Enter Title"),
                 TextField(
                   controller: title,
                   decoration: InputDecoration(
@@ -141,35 +174,53 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
                     filled: true,
                   ),
                 ),
+                SizedBox(height: 10,),
+                Text("Enter Description"),
                 TextField(
                     controller: description,
+                    maxLines: 2,
                     decoration: InputDecoration(
                       fillColor: Colors.white,
                       filled: true,
                     )),
+                SizedBox(height: 10,),
+                Text("Enter start time"),
                 TextField(
-                  onTap: () => _selectDate(context),
+                  onTap: () => changeStartTime(context),
                   readOnly: true,
                   decoration: InputDecoration(
                     fillColor: Colors.white,
                     filled: true,
-                    hintText: formattedMonth,
+                    hintText: startTime.toString(),
                   ),
                 ),
+                SizedBox(height: 10,),
+                Text("Enter End Time"),
+                TextField(
+                  onTap: () => changeEndTime(context),
+                  readOnly: true,
+                  decoration: InputDecoration(
+                    fillColor: Colors.white,
+                    filled: true,
+                    hintText: endTime.toString(),
+                  ),
+                ),
+                SizedBox(height: 10,),
                 ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+
+                    },
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.red,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10))),
-                    child: Text(
+                    child: const Text(
                       "Save",
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: Colors.white,
                         fontFamily: 'Bebas Neue',
                         fontSize: 20,
-                      ),
-                    ))
+                      ))),
               ],
             ),
           );
@@ -382,7 +433,7 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
                                         DateTime.parse(task['startTimeISO']),
                                     endTime: DateTime.parse(task['endTimeISO']),
                                     category: task['category'],
-                                  )),
+                                  ),index),
                                 );
                               }).toList(),
                             )
