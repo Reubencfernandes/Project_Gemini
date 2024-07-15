@@ -33,7 +33,7 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
   final model = GenerativeModel(
       model: 'gemini-1.5-flash',
       apiKey:
-      'AIzaSyAzwL_9gB9jeWZEn13l88MjhySTEj4Pa8M'); // Replace with your actual API key
+          'AIzaSyAzwL_9gB9jeWZEn13l88MjhySTEj4Pa8M'); // Replace with your actual API key
   DateTime now = DateTime.now().toUtc();
   DateTime selectedDate = DateTime.now().toUtc();
   TextEditingController description = TextEditingController();
@@ -63,11 +63,22 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
       isGenerate = !isGenerate;
     });
   }
-
   Future<void> changeStartTime(BuildContext context) async {
     final TimeOfDay? picked = await showTimePicker(
       context: context,
       initialTime: startTime,
+      builder: (context, child) {
+        return Theme(
+          data: ThemeData.light().copyWith(
+            colorScheme: ColorScheme.light(
+              primary: Colors.redAccent,
+              secondary: Colors.redAccent,
+
+            ),
+          ),
+          child: child!,
+        );
+      },
     );
     if (picked != null && picked != startTime) {
       setState(() {
@@ -77,10 +88,23 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
     }
   }
 
+
   Future<void> changeEndTime(BuildContext context) async {
     final TimeOfDay? picked = await showTimePicker(
       context: context,
       initialTime: endTime,
+      builder: (context, child) {
+        return Theme(
+          data: ThemeData.light().copyWith(
+            colorScheme: ColorScheme.light(
+              primary: Colors.redAccent,
+              secondary: Colors.redAccent,
+
+            ),
+          ),
+          child: child!,
+        );
+      },
     );
     if (picked != null && picked != endTime) {
       setState(() {
@@ -181,7 +205,8 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
         context: context,
         builder: (BuildContext context) {
           return Container(
-            margin: const EdgeInsets.only(top: 50, bottom: 50, left: 30, right: 30),
+            margin:
+                const EdgeInsets.only(top: 50, bottom: 50, left: 30, right: 30),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -244,8 +269,12 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
                         tasksForToday[index]['category'] = categroy.text;
                         tasksForToday[index]['title'] = title.text;
                         tasksForToday[index]['description'] = description.text;
-                        tasksForToday[index]['startTimeISO'] = convertTimeOfDayToDateTime(selectedDate, startTime).toIso8601String();
-                        tasksForToday[index]['endTimeISO'] = convertTimeOfDayToDateTime(selectedDate, endTime).toIso8601String();
+                        tasksForToday[index]['startTimeISO'] =
+                            convertTimeOfDayToDateTime(selectedDate, startTime)
+                                .toIso8601String();
+                        tasksForToday[index]['endTimeISO'] =
+                            convertTimeOfDayToDateTime(selectedDate, endTime)
+                                .toIso8601String();
                       });
                       Navigator.pop(context);
                     },
@@ -273,7 +302,8 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
 
   void _showError(String message) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(message, style: const TextStyle(fontFamily: 'Inter', fontSize: 15)),
+      content: Text(message,
+          style: const TextStyle(fontFamily: 'Inter', fontSize: 15)),
       backgroundColor: Colors.red,
     ));
   }
@@ -381,7 +411,7 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
                           border: InputBorder.none,
                           filled: true,
                           hintText:
-                          'I wake up at 6:00 AM, attend church from 6:30 to 7:00 AM, and then eat breakfast at home. After that, I prepare for college and arrive at 9:00 AM. I return home at 5:30 PM, watch "My Hero Academia" on TV, study afterward, and go to sleep at 11:00 PM.',
+                              'I wake up at 6:00 AM, attend church from 6:30 to 7:00 AM, and then eat breakfast at home. After that, I prepare for college and arrive at 9:00 AM. I return home at 5:30 PM, watch "My Hero Academia" on TV, study afterward, and go to sleep at 11:00 PM.',
                         ),
                         maxLines: 8,
                       ),
@@ -452,53 +482,52 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
                       ),
                       isGenerate
                           ? Column(
-                        children:
-                        tasksForToday.asMap().entries.map((entry) {
-                          int index = entry.key;
-                          var task = entry.value;
-                          return CreateTaskCard(
-                            task: Task(
-                              title: task['title'],
-                              day: DateFormat("dd-MM-yyyy").format(
-                                  DateTime.parse(task['startTimeISO'])),
-                              description: task['description'],
-                              startTime:
-                              DateTime.parse(task['startTimeISO']),
-                              endTime: DateTime.parse(task['endTimeISO']),
-                              category: task['category'],
-                            ),
-                            onDelete: () => deleteTask(index),
-                            onEdit: () => editTask(
-                              Task(
-                                title: task['title'],
-                                day: DateFormat("dd-MM-yyyy").format(
-                                    DateTime.parse(
-                                        task['startTimeISO'])),
-                                description: task['description'],
-                                startTime: DateTime.parse(
-                                    task['startTimeISO']),
-                                endTime: DateTime.parse(
-                                    task['endTimeISO']),
-                                category: task['category'],
-                              ),
-                              index,
-                            ),
-                          );
-                        }).toList(),
-                      )
+                              children:
+                                  tasksForToday.asMap().entries.map((entry) {
+                                int index = entry.key;
+                                var task = entry.value;
+                                return CreateTaskCard(
+                                  task: Task(
+                                    title: task['title'],
+                                    day: DateFormat("dd-MM-yyyy").format(
+                                        DateTime.parse(task['startTimeISO'])),
+                                    description: task['description'],
+                                    startTime:
+                                        DateTime.parse(task['startTimeISO']),
+                                    endTime: DateTime.parse(task['endTimeISO']),
+                                    category: task['category'],
+                                  ),
+                                  onDelete: () => deleteTask(index),
+                                  onEdit: () => editTask(
+                                    Task(
+                                      title: task['title'],
+                                      day: DateFormat("dd-MM-yyyy").format(
+                                          DateTime.parse(task['startTimeISO'])),
+                                      description: task['description'],
+                                      startTime:
+                                          DateTime.parse(task['startTimeISO']),
+                                      endTime:
+                                          DateTime.parse(task['endTimeISO']),
+                                      category: task['category'],
+                                    ),
+                                    index,
+                                  ),
+                                );
+                              }).toList(),
+                            )
                           : const Column(
-                        children: [
-                          SizedBox(
-                            height: 40,
-                          ),
-                          Center(
-                            child: CircularProgressIndicator(
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                  Colors.black26),
+                              children: [
+                                SizedBox(
+                                  height: 40,
+                                ),
+                                Center(
+                                  child: CircularProgressIndicator(
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        Colors.black26),
+                                  ),
+                                )
+                              ],
                             ),
-                          )
-                        ],
-                      ),
                     ],
                   ),
                 ),

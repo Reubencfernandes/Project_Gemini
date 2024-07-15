@@ -8,10 +8,12 @@ import '../../entities/task.dart';
 class CreateTaskCard extends StatefulWidget {
   final Task task;
   final VoidCallback onDelete;
-    final VoidCallback onEdit;
+  final VoidCallback onEdit;
   const CreateTaskCard({
     super.key,
-    required this.task, required this.onDelete, required this.onEdit,
+    required this.task,
+    required this.onDelete,
+    required this.onEdit,
   });
 
   @override
@@ -29,7 +31,8 @@ class _CreateTaskCardState extends State<CreateTaskCard> {
     return Card(
       margin: const EdgeInsets.only(left: 5, right: 5, top: 10),
       child: Padding(
-        padding: const EdgeInsets.only(top: 15, bottom: 15, left: 12, right: 12),
+        padding:
+            const EdgeInsets.only(top: 15, bottom: 15, left: 12, right: 12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -42,13 +45,29 @@ class _CreateTaskCardState extends State<CreateTaskCard> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    ElevatedButton(onPressed: widget.onEdit,style: ElevatedButton.styleFrom(backgroundColor: Colors.transparent,
-                      elevation: 0,) // will call onEdit on CreateTaskPage
-                    , child: Icon(Icons.edit_calendar,color: Colors.grey[800],)),
-                    ElevatedButton(onPressed: widget.onDelete,style: ElevatedButton.styleFrom(backgroundColor: Colors.transparent,
-                      elevation: 0,)
+                    ElevatedButton(
+                        onPressed: widget.onEdit,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.transparent,
+                          elevation: 0,
+                        ) // will call onEdit on CreateTaskPage
+                        ,
+                        child: Icon(
+                          Icons.edit_calendar,
+                          color: Colors.grey[800],
+                        )),
+                    ElevatedButton(
+                        onPressed: widget.onDelete,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.transparent,
+                          elevation: 0,
+                        )
                         // will call delete in CreateTaskPage
-                    , child: Icon(Icons.delete_forever,color: Colors.grey[800],)),
+                        ,
+                        child: Icon(
+                          Icons.delete_forever,
+                          color: Colors.grey[800],
+                        )),
                   ],
                 )
               ],
