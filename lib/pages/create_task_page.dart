@@ -6,13 +6,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animated_button/flutter_animated_button.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:intl/intl.dart';
+import 'package:isar/isar.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'components/create_task_card.dart';
 import 'components/task_card.dart';
 
 const String promptStart =
-    "Create a schedule for my day. Give output in plain JSON format as an array with title, description, startTimeISO, endTimeISO and category (eg. sports, education, work, hobby). Do not output markdown.";
+    "Create a schedule for my day. Give output in plain JSON format as an array with title, description, startTimeISO, endTimeISO and category (eg. sports, education, work, hobby).Do not output markdown.";
 
 class CreateTaskPage extends StatefulWidget {
   const CreateTaskPage({super.key});
@@ -48,6 +49,11 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
     description.text = '';
     startTime = const TimeOfDay(hour: 9, minute: 0); // Initial start time
     endTime = const TimeOfDay(hour: 17, minute: 0); // Initial end time
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     startTimeController.text = startTime.format(context);
     endTimeController.text = endTime.format(context);
   }
@@ -132,9 +138,7 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
       jsonResponseText = jsonResponseText.substring(
           jsonResponseText.indexOf('['), jsonResponseText.lastIndexOf(']') + 1);
       print("Json Response Text: $jsonResponseText");
-
       jsonData = json.decode(jsonResponseText);
-
       setState(() {
         alwayschange();
         buttonColor = Colors.red;
@@ -143,6 +147,10 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
       });
     } catch (e) {
       _showError('Error generating tasks: $e');
+      setState(() {
+        alwayschange();
+        buttonColor = Colors.red;
+      });
     }
   }
 
@@ -156,6 +164,8 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
   Future editTask(Task task, int index) {
     TextEditingController title = TextEditingController();
     TextEditingController description = TextEditingController();
+    TextEditingController categroy = TextEditingController();
+    categroy.text = task.category;
     title.text = task.title;
     description.text = task.description;
 
@@ -176,6 +186,15 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                TextField(
+                  controller: categroy,
+                  decoration: const InputDecoration(
+                    fillColor: Colors.white,
+                    filled: true,
+                    border: OutlineInputBorder(),
+                    labelText: "Enter Category",
+                  ),
+                ),
                 TextField(
                   controller: title,
                   decoration: const InputDecoration(
@@ -222,6 +241,7 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
                 ElevatedButton(
                     onPressed: () {
                       setState(() {
+                        tasksForToday[index]['category'] = categroy.text;
                         tasksForToday[index]['title'] = title.text;
                         tasksForToday[index]['description'] = description.text;
                         tasksForToday[index]['startTimeISO'] = convertTimeOfDayToDateTime(selectedDate, startTime).toIso8601String();
