@@ -81,7 +81,7 @@ class _CreateAccountState extends State<CreateAccount> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.asset('images/logo.png',height: 60,
+                Image.asset('images/logo.jpg',height: 60,
                 ),
                 SizedBox(width: 10,),
                 Text(
