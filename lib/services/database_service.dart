@@ -1,6 +1,7 @@
 import 'package:ayumi/entities/task.dart';
 import 'package:ayumi/entities/user.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -22,28 +23,28 @@ class DatabaseService extends ChangeNotifier {
 
   Future<void> init() async {
     final documentsDirectory = await getApplicationDocumentsDirectory();
-    _isar = await Isar.open([TaskSchema, UserSchema], directory: documentsDirectory.path);
+    _isar = await Isar.open([TaskSchema, UserSchema],
+        directory: documentsDirectory.path);
+  }
+
+  List<Task> getTasksForDate(String day) {
+    return _isar.tasks.filter().dayEqualTo(day).findAllSync();
   }
 
   // Task functions
   // CRUD
   Future<List<Task>> _getTasks() async {
-    // get the time as 00:00 and 23:59 to use in filter
-    DateTime startOfDay = DateTime(
-      DateTime.now().year,
-      DateTime.now().month,
-      DateTime.now().day,
-    );
-    DateTime endOfDay = DateTime(
-      DateTime.now().year,
-      DateTime.now().month,
-      DateTime.now().day + 1,
-    );
+    String day = DateFormat('dd MMMM yyyy').format(DateTime.now());
+    return await _isar.tasks.filter().dayEqualTo(day).findAll();
+  }
 
-    return await _isar.tasks
-        .filter()
-        .startTimeBetween(startOfDay, endOfDay)
-        .findAll();
+  Future<void> deleteAllTasksForDate(String day) async {
+    await _isar.writeTxn(() async {
+      final count = await _isar.tasks.filter().dayEqualTo(day).deleteAll();
+      print('Deleted $count tasks of day $day');
+    });
+    notifyListeners();
+    return;
   }
 
   Future<void> readTasks() async {
@@ -54,9 +55,6 @@ class DatabaseService extends ChangeNotifier {
 
   Future<void> addTask(Task newTask) async {
     await _isar.writeTxn(() async {
-
-
-      //await _isar.tasks.filter().day(newTask.startTime,newTask.endTime).deleteAll();
       await _isar.tasks.put(newTask);
     });
     readTasks();
@@ -104,8 +102,9 @@ class DatabaseService extends ChangeNotifier {
     });
     readUsers();
   }
-  Future<void> wipeEverything() async{
-    await _isar.writeTxn(() async{
+
+  Future<void> wipeEverything() async {
+    await _isar.writeTxn(() async {
       await _isar.clear();
     });
   }

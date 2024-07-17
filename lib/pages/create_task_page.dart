@@ -6,11 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animated_button/flutter_animated_button.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:intl/intl.dart';
-import 'package:isar/isar.dart';
-import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'components/create_task_card.dart';
-import 'components/task_card.dart';
 
 const String promptStart =
     "Create a schedule for my day. Give output in plain JSON format as an array with title, description, startTimeISO, endTimeISO and category (eg. sports, education, work, hobby).Do not output markdown.";
@@ -63,6 +60,7 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
       isGenerate = !isGenerate;
     });
   }
+
   Future<void> changeStartTime(BuildContext context) async {
     final TimeOfDay? picked = await showTimePicker(
       context: context,
@@ -73,7 +71,6 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
             colorScheme: ColorScheme.light(
               primary: Colors.redAccent,
               secondary: Colors.redAccent,
-
             ),
           ),
           child: child!,
@@ -88,7 +85,6 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
     }
   }
 
-
   Future<void> changeEndTime(BuildContext context) async {
     final TimeOfDay? picked = await showTimePicker(
       context: context,
@@ -99,7 +95,6 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
             colorScheme: ColorScheme.light(
               primary: Colors.redAccent,
               secondary: Colors.redAccent,
-
             ),
           ),
           child: child!,
@@ -148,6 +143,7 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
     String todayDate = DateTime.now().toIso8601String();
 
     try {
+      print("Today's date is $formattedMonth");
       final response = await model.generateContent([
         Content.text(
             '$promptStart Today\'s date is $formattedMonth. $textDescription')
@@ -182,7 +178,6 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
     setState(() {
       tasksForToday.removeAt(index);
     });
-    print("IM BLUE DA DA DE DA DU");
   }
 
   Future editTask(Task task, int index) {
@@ -197,9 +192,6 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
     endTime = TimeOfDay.fromDateTime(task.endTime);
     startTimeController.text = startTime.format(context);
     endTimeController.text = endTime.format(context);
-
-    print(task.title);
-    print("MAE HA HI MAE HA HU MAE YO NUMA NUMA EH");
 
     return showModalBottomSheet(
         context: context,
@@ -347,11 +339,13 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
               ),
               ElevatedButton(
                 onPressed: () async {
-                  if (jsonData.isEmpty) {
+                  if (tasksForToday.isEmpty) {
                     _showError('Failed to generate response text');
                     return;
                   }
-                  for (var task in jsonData) {
+                  await DatabaseService().deleteAllTasksForDate(
+                      DateFormat("dd MMMM yyyy").format(selectedDate));
+                  for (var task in tasksForToday) {
                     await DatabaseService().addTask(
                       Task(
                         title: task['title'],
@@ -489,7 +483,7 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
                                 return CreateTaskCard(
                                   task: Task(
                                     title: task['title'],
-                                    day: DateFormat("dd-MM-yyyy").format(
+                                    day: DateFormat("dd MMMM yyyy").format(
                                         DateTime.parse(task['startTimeISO'])),
                                     description: task['description'],
                                     startTime:
@@ -501,7 +495,7 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
                                   onEdit: () => editTask(
                                     Task(
                                       title: task['title'],
-                                      day: DateFormat("dd-MM-yyyy").format(
+                                      day: DateFormat("dd MMMM yyyy").format(
                                           DateTime.parse(task['startTimeISO'])),
                                       description: task['description'],
                                       startTime:

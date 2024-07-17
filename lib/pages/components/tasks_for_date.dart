@@ -2,8 +2,10 @@ import 'package:ayumi/pages/components/task_card.dart';
 import 'package:ayumi/services/database_service.dart';
 import 'package:flutter/material.dart';
 
-class PlansForToday extends StatelessWidget {
-  const PlansForToday({super.key});
+class TasksForDate extends StatelessWidget {
+  final String day;
+
+  const TasksForDate({super.key, required this.day});
 
   @override
   Widget build(BuildContext context) {
@@ -11,14 +13,14 @@ class PlansForToday extends StatelessWidget {
       listenable: DatabaseService(),
       builder: (context, Widget? child) {
         return Column(
-          children: buildPlansForToday(),
+          children: buildTasksList(),
         );
       },
     );
   }
 
-  List<Widget> buildPlansForToday() {
-    var cards = DatabaseService().tasks.map((task) {
+  List<Widget> buildTasksList() {
+    var cards = DatabaseService().getTasksForDate(day).map((task) {
       return TaskCard(task: task);
     }).toList();
 
