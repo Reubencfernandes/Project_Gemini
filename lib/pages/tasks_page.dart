@@ -1,4 +1,4 @@
-import 'package:ayumi/pages/components/plans_for_today.dart';
+import 'package:ayumi/pages/components/tasks_for_date.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -133,7 +133,8 @@ class _TasksPageState extends State<TasksPage> {
           Expanded(
             child: ListView(
               children: [
-                const PlansForToday(),
+                TasksForDate(
+                    day: DateFormat("dd MMMM yyyy").format(selectedDate)),
               ],
             ),
           ),
