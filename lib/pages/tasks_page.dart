@@ -84,10 +84,7 @@ class _TasksPageState extends State<TasksPage> {
                 child: SizedBox(
                   width: 50.0,
                   height: 50.0,
-                  child: Image.network(
-                    "https://yt3.ggpht.com/ytc/AIdro_lG10P4m8LYfMtwEO1KRLthQrqWR2aDuGEAi4TVCVbJsJc=s48-c-k-c0x00ffffff-no-rj",
-                    fit: BoxFit.cover,
-                  ),
+                  child: Image.asset('images/user.jpg')
                 ),
               ),
             ],

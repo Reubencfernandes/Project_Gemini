@@ -1,3 +1,4 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:ayumi/pages/create_task_page.dart';
 import 'package:ayumi/pages/home_page.dart';
 import 'package:ayumi/pages/tasks_page.dart';
@@ -17,25 +18,34 @@ class _NavigationBarState extends State<BottomTabNavigation> {
     const CreateTaskPage(),
     const TasksPage()
   ];
+
   void _onItemTapped(int index) {
+    Fetchnoti();
     setState(() {
       _selectedIndex = index;
     });
   }
+
+  Future<void> Fetchnoti() async {
+    List<NotificationModel> scheduledNotifications =
+        await AwesomeNotifications().listScheduledNotifications();
+
+    scheduledNotifications.forEach((notification) {
+      print('Scheduled Notification: ${notification.content?.title}');
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[300],
-      body: _pageList[_selectedIndex],/*IndexedStack(
-        children: _pageList,
-        index: _selectedIndex,
-      ),*/
+      body: _pageList[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
-        selectedLabelStyle: const TextStyle(fontSize: 15,color: Colors.black),
+        selectedLabelStyle: const TextStyle(fontSize: 15, color: Colors.black),
         unselectedLabelStyle: const TextStyle(fontSize: 15),
-          currentIndex: _selectedIndex,
-          onTap:_onItemTapped,
-          selectedItemColor: Colors.black,
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        selectedItemColor: Colors.black,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),

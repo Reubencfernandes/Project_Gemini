@@ -11,7 +11,7 @@ import 'package:intl/intl.dart';
 import 'components/create_task_card.dart';
 
 const String promptStart =
-    "Create a schedule for my day. Give output in plain JSON format as an array with title, description, startTimeISO, endTimeISO and category (eg. sports, education, work, hobby).Do not output markdown.";
+    "Create a schedule for my day. Give output in plain JSON format as an array with title, description, startTimeISO, endTimeISO and category (eg. sports, education, work, studies, hobby).Do not output markdown.";
 
 class CreateTaskPage extends StatefulWidget {
   const CreateTaskPage({super.key});
@@ -171,7 +171,6 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
         buttonColor = Colors.red;
       });
     }
-    print("EEEEEEEEEEEEEEEEEEEEEEEEEEE");
   }
 
   void deleteTask(int index) {
@@ -179,6 +178,7 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
       tasksForToday.removeAt(index);
     });
   }
+
 
   Future editTask(Task task, int index) {
     TextEditingController title = TextEditingController();
@@ -317,32 +317,40 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
       int uniqueId;
       try {
         uniqueId = int.parse(formattedDateHour);
+        print(uniqueId);
       } catch (e) {
         // Handle the error if the string is not a valid integer
         print("Error parsing unique ID: ${e.toString()}");
         continue; // Skip this notification
       }
-
-      await AwesomeNotifications().createNotification(
-        content: NotificationContent(
-          id: uniqueId, // Use the generated unique id
-          channelKey: 'Task',
-          title: task['title'],
-          body: task['description'],
-          wakeUpScreen: true,
-          category: NotificationCategory.Alarm,
-        ),
-        schedule: NotificationCalendar(
-          year: startDateTime.year,
-          month: startDateTime.month,
-          day: startDateTime.day,
-          hour: startDateTime.hour,
-          minute: startDateTime.minute,
-          second: startDateTime.second,
-          timeZone: localTimeZone,
-          preciseAlarm: true,
-        ),
-      );
+      AwesomeNotifications().isNotificationAllowed().then((perms) async {
+        if(perms)
+          {
+            await AwesomeNotifications().createNotification(
+              content: NotificationContent(
+                  id: uniqueId,
+                  // Use the generated unique id
+                  channelKey: 'Task',
+                  title: "Task For Now ${task['title']}",
+                  body: "${task['description']} from ${DateFormat('hh:mm aa')
+                      .format(startDateTime)} to ${DateFormat('hh:mm aa').format(
+                      endDateTime)}",
+                  wakeUpScreen: true,
+                  category: NotificationCategory.Email
+              ),
+              schedule: NotificationCalendar(
+                year: startDateTime.year,
+                month: startDateTime.month,
+                day: startDateTime.day,
+                hour: startDateTime.hour,
+                minute: startDateTime.minute,
+                second: startDateTime.second,
+                timeZone: localTimeZone,
+                preciseAlarm: true,
+              ),
+            );
+          }
+      });
     }
   }
   @override

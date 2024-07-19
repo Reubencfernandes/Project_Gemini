@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:ayumi/entities/task.dart';
 import 'package:ayumi/pages/components/my_badge.dart';
+import 'package:ayumi/pages/onboarding_page.dart';
 import 'package:ayumi/services/database_service.dart';
 import 'package:color_hash/color_hash.dart';
 import 'package:flutter/material.dart';
@@ -313,7 +315,7 @@ class _WelcomeHeaderState extends State<WelcomeHeader> {
       future: _fetchUserName(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const CircularProgressIndicator();
+          return const CircularProgressIndicator(color: Colors.grey,);
         } else if (snapshot.hasError) {
           return const Text('Error loading user name');
         } else if (snapshot.hasData) {
@@ -326,8 +328,8 @@ class _WelcomeHeaderState extends State<WelcomeHeader> {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(50.0),
-                    child: Image.network(
-                      "https://yt3.ggpht.com/ytc/AIdro_lG10P4m8LYfMtwEO1KRLthQrqWR2aDuGEAi4TVCVbJsJc=s48-c-k-c0x00ffffff-no-rj",
+                    child: Image.asset(
+                      "images/user.jpg",
                       width: 50,
                       height: 50,
                       fit: BoxFit.cover,
@@ -370,7 +372,8 @@ class _WelcomeHeaderState extends State<WelcomeHeader> {
                           onPressed: () async {
                             Navigator.of(context).pop();
                             await DatabaseService().wipeEverything();
-                            exit(0);
+                            await AwesomeNotifications().cancelAll();
+                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => OnboardingPage()));
                           },
                           child: const Text('OK',style: TextStyle(color: Colors.blue),),
                         ),

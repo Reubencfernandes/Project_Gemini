@@ -3,6 +3,7 @@ import 'package:ayumi/services/database_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 import '../entities/user.dart';
 
 class CreateAccount extends StatefulWidget {
@@ -16,16 +17,16 @@ class _CreateAccountState extends State<CreateAccount> {
   bool isRegister = false;
   DateTime now = DateTime.now().toUtc();
   DateTime selectedDate = DateTime.now().toUtc();
-  late DateTime lastDate = DateTime(now.year + 1, now.month, now.day);
-  late String formattedMonth = DateFormat('MMMM dd').format(selectedDate);
+  late DateTime lastDate = DateTime(now.year-100, now.month, now.day);
+  late String formattedMonth = DateFormat('MMMM dd, yyyy').format(selectedDate);
   final TextEditingController nameController = TextEditingController();
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
         context: context,
         initialDate: selectedDate,
-        firstDate: now,
-        lastDate: lastDate,
+        firstDate: lastDate,
+        lastDate: now,
         builder: (BuildContext context, Widget? child) {
           return Theme(
               data: ThemeData.light().copyWith(
@@ -38,11 +39,11 @@ class _CreateAccountState extends State<CreateAccount> {
     if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
-        formattedMonth = DateFormat('MMMM dd').format(selectedDate);
+        formattedMonth = DateFormat('MMMM dd, yyyy').format(selectedDate);
       });
     }
   }
-  void alwayschange()
+  void alwaysChange()
   {
     setState(() {
       isRegister = !isRegister;
@@ -50,13 +51,13 @@ class _CreateAccountState extends State<CreateAccount> {
   }
 
   void Register(String hisName, String hisBirthday) {
-    alwayschange();
+    alwaysChange();
     User newUser = User()
-      ..name = hisName
+      ..name = hisName.isNotEmpty ? hisName : 'User'
       ..birthday = hisBirthday;
 
     DatabaseService().addUser(newUser);
-    alwayschange();
+    alwaysChange();
     Navigator.push(context, MaterialPageRoute(builder: (context) => const BottomTabNavigation()));
   }
 
@@ -78,7 +79,7 @@ class _CreateAccountState extends State<CreateAccount> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.asset('images/logo.jpg',height: 60,
+                Image.asset('images/logo.jpg',height: 50,
                 ),
                 const SizedBox(width: 10,),
                 const Text(
@@ -140,7 +141,7 @@ class _CreateAccountState extends State<CreateAccount> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.red,
                   alignment: Alignment.center,
-                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 120),
+                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 100),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15)),
                 ),
