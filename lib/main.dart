@@ -53,15 +53,6 @@ class _MyAppState extends State<MyApp> {
         AwesomeNotifications().requestPermissionToSendNotifications();
       }
     });
-    AwesomeNotifications().createNotification(
-        content: NotificationContent(
-          id: 10,
-          channelKey: 'Task',
-          actionType: ActionType.Default,
-          title: 'Hello World!',
-          body: 'This is my first notification!',
-        )
-    );
     return ResponsiveSizer(builder: (context, orientation, screenType) {
       return MaterialApp(
         title: "Project Gemini",

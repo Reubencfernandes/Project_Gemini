@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:ayumi/entities/task.dart';
 import 'package:ayumi/services/database_service.dart';
 import 'package:flutter/material.dart';
@@ -298,7 +299,52 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
       backgroundColor: Colors.red,
     ));
   }
+  void scheduleNotifications(List<dynamic> tasksForToday) async {
+    String localTimeZone = await AwesomeNotifications().getLocalTimeZoneIdentifier();
 
+    for (var task in tasksForToday) {
+      DateTime startDateTime = DateTime.parse(task['startTimeISO']).toLocal();
+      DateTime endDateTime = DateTime.parse(task['endTimeISO']).toLocal();
+
+      // Check if the start time is in the future
+      if (startDateTime.isBefore(DateTime.now())) {
+        print("The start time ${startDateTime.toString()} is in the past. Skipping notification.");
+        continue;
+      }
+
+      // Generate a unique ID based on the date and hour
+      String formattedDateHour = DateFormat('yyyyMMddHH').format(startDateTime);
+      int uniqueId;
+      try {
+        uniqueId = int.parse(formattedDateHour);
+      } catch (e) {
+        // Handle the error if the string is not a valid integer
+        print("Error parsing unique ID: ${e.toString()}");
+        continue; // Skip this notification
+      }
+
+      await AwesomeNotifications().createNotification(
+        content: NotificationContent(
+          id: uniqueId, // Use the generated unique id
+          channelKey: 'Task',
+          title: task['title'],
+          body: task['description'],
+          wakeUpScreen: true,
+          category: NotificationCategory.Alarm,
+        ),
+        schedule: NotificationCalendar(
+          year: startDateTime.year,
+          month: startDateTime.month,
+          day: startDateTime.day,
+          hour: startDateTime.hour,
+          minute: startDateTime.minute,
+          second: startDateTime.second,
+          timeZone: localTimeZone,
+          preciseAlarm: true,
+        ),
+      );
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -357,6 +403,7 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
                       ),
                     );
                   }
+                  scheduleNotifications(tasksForToday);
                   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                     content: Text(
                       "Task Added to the Database",
