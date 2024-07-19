@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:ayumi/entities/task.dart';
-import 'package:ayumi/entities/user.dart';
 import 'package:ayumi/pages/components/my_badge.dart';
 import 'package:ayumi/services/database_service.dart';
 import 'package:color_hash/color_hash.dart';

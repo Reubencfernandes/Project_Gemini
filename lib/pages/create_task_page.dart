@@ -68,7 +68,7 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
       builder: (context, child) {
         return Theme(
           data: ThemeData.light().copyWith(
-            colorScheme: ColorScheme.light(
+            colorScheme: const ColorScheme.light(
               primary: Colors.redAccent,
               secondary: Colors.redAccent,
             ),
@@ -92,7 +92,7 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
       builder: (context, child) {
         return Theme(
           data: ThemeData.light().copyWith(
-            colorScheme: ColorScheme.light(
+            colorScheme: const ColorScheme.light(
               primary: Colors.redAccent,
               secondary: Colors.redAccent,
             ),
@@ -140,8 +140,6 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
         ? description.text
         : 'I wake up at 6:00 AM, attend church from 6:30 to 7:00 AM, and then eat breakfast at home. After that, I prepare for college and arrive at 9:00 AM. I return home at 5:30 PM, watch "My Hero Academia" on TV, study afterward, and go to sleep at 11:00 PM.';
 
-    String todayDate = DateTime.now().toIso8601String();
-
     try {
       print("Today's date is $formattedMonth");
       final response = await model.generateContent([
@@ -172,6 +170,7 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
         buttonColor = Colors.red;
       });
     }
+    print("EEEEEEEEEEEEEEEEEEEEEEEEEEE");
   }
 
   void deleteTask(int index) {

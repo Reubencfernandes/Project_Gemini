@@ -1,7 +1,7 @@
 import 'package:ayumi/pages/components/my_badge.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:responsive_sizer/responsive_sizer.dart';
+
 
 import '../../entities/task.dart';
 

@@ -3,9 +3,6 @@ import 'package:ayumi/services/database_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:isar/isar.dart';
-import 'package:responsive_sizer/responsive_sizer.dart';
-
 import '../entities/user.dart';
 
 class CreateAccount extends StatefulWidget {
@@ -60,7 +57,7 @@ class _CreateAccountState extends State<CreateAccount> {
 
     DatabaseService().addUser(newUser);
     alwayschange();
-    Navigator.push(context, MaterialPageRoute(builder: (context) => BottomTabNavigation()));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => const BottomTabNavigation()));
   }
 
 
@@ -83,8 +80,8 @@ class _CreateAccountState extends State<CreateAccount> {
               children: [
                 Image.asset('images/logo.jpg',height: 60,
                 ),
-                SizedBox(width: 10,),
-                Text(
+                const SizedBox(width: 10,),
+                const Text(
                   "Create Your Account",
                   style: TextStyle(
                       fontSize: 34,
@@ -94,7 +91,7 @@ class _CreateAccountState extends State<CreateAccount> {
               ],
             ),
             const SizedBox(height: 10),
-            Text(
+            const Text(
               "Fill in your details to create a new user account.",
               style: TextStyle(
                   fontFamily: "Inter",
@@ -106,7 +103,7 @@ class _CreateAccountState extends State<CreateAccount> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+                const Text(
                   "Enter Your Name",
                   style: TextStyle(fontFamily: "Inter"),
                 ),
@@ -153,7 +150,7 @@ class _CreateAccountState extends State<CreateAccount> {
                       fontFamily: 'Bebas Neue',
                       fontSize: 24,
                       color: Colors.white),
-                ): CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.white),),
+                ): const CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.white),),
             ),
           ],
         ),

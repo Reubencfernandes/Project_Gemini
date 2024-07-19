@@ -102,7 +102,7 @@ class _TasksPageState extends State<TasksPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       const Text("Select Date",
@@ -110,7 +110,7 @@ class _TasksPageState extends State<TasksPage> {
                               fontFamily: 'Inter',
                               color: Colors.black,
                               fontSize: 15)),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       TextField(
