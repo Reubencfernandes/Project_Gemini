@@ -142,7 +142,6 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
         : 'I wake up at 6:00 AM, attend church from 6:30 to 7:00 AM, and then eat breakfast at home. After that, I prepare for college and arrive at 9:00 AM. I return home at 5:30 PM, watch "My Hero Academia" on TV, study afterward, and go to sleep at 11:00 PM.';
 
     try {
-      print("Today's date is $formattedMonth");
       final response = await model.generateContent([
         Content.text(
             '$promptStart Today\'s date is $formattedMonth. $textDescription')
@@ -156,7 +155,6 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
       String jsonResponseText = response.text!;
       jsonResponseText = jsonResponseText.substring(
           jsonResponseText.indexOf('['), jsonResponseText.lastIndexOf(']') + 1);
-      print("Json Response Text: $jsonResponseText");
       jsonData = json.decode(jsonResponseText);
       setState(() {
         alwayschange();
@@ -319,47 +317,37 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
 
       // Check if the start time is in the future
       if (startDateTime.isBefore(DateTime.now())) {
-        print("The start time ${startDateTime.toString()} is in the past. Skipping notification.");
         continue;
-      }
-
-      // Generate a unique ID based on the date and hour
-      String formattedDateHour = DateFormat('yyyyMMddHH').format(startDateTime);
-      int uniqueId;
-      try {
-        uniqueId = int.parse(formattedDateHour);
-        print(uniqueId);
-      } catch (e) {
-        // Handle the error if the string is not a valid integer
-        print("Error parsing unique ID: ${e.toString()}");
-        continue; // Skip this notification
       }
       AwesomeNotifications().isNotificationAllowed().then((perms) async {
         if(perms)
           {
-            await AwesomeNotifications().createNotification(
-              content: NotificationContent(
-                  id: uniqueId,
-                  // Use the generated unique id
-                  channelKey: 'Task',
-                  title: "Task For Now ${task['title']}",
-                  body: "${task['description']} from ${DateFormat('hh:mm aa')
-                      .format(startDateTime)} to ${DateFormat('hh:mm aa').format(
-                      endDateTime)}",
-                  wakeUpScreen: true,
-                  category: NotificationCategory.Email
-              ),
-              schedule: NotificationCalendar(
-                year: startDateTime.year,
-                month: startDateTime.month,
-                day: startDateTime.day,
-                hour: startDateTime.hour,
-                minute: startDateTime.minute,
-                second: startDateTime.second,
-                timeZone: localTimeZone,
-                preciseAlarm: true,
-              ),
-            );
+            DatabaseService().getTasksForDate(DateFormat("dd MMMM yyyy").format(startDateTime)).map((t) async {
+              await AwesomeNotifications().createNotification(
+                content: NotificationContent(
+                    id: t.id ?? 0,
+                    // Use the generated unique id
+                    channelKey: 'Task',
+                    title: "Task For Now ${task['title']}",
+                    body: "${task['description']} from ${DateFormat('hh:mm aa')
+                        .format(startDateTime)} to ${DateFormat('hh:mm aa').format(
+                        endDateTime)}",
+                    wakeUpScreen: true,
+                    category: NotificationCategory.Reminder
+                ),
+                schedule: NotificationCalendar(
+                  year: startDateTime.year,
+                  month: startDateTime.month,
+                  day: startDateTime.day,
+                  hour: startDateTime.hour,
+                  minute: startDateTime.minute,
+                  second: startDateTime.second,
+                  timeZone: localTimeZone,
+                  preciseAlarm: true,
+                ),
+              );
+            }).toList();
+
           }
       });
     }
@@ -407,6 +395,15 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
                     _showError('Failed to generate response text');
                     return;
                   }
+                  await DatabaseService().getTasksForDate(DateFormat("dd MMMM yyyy").format(selectedDate)).map((task) {
+                    try {
+                      AwesomeNotifications().cancel(task.id ?? 0);
+                    } catch(e)
+                    {
+                      _showError("An Error Occurred With Notifications");
+                    }
+                  }).toList();
+
                   await DatabaseService().deleteAllTasksForDate(
                       DateFormat("dd MMMM yyyy").format(selectedDate));
                   for (var task in tasksForToday) {
