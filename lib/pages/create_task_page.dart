@@ -31,7 +31,7 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
   final model = GenerativeModel(
       model: 'gemini-1.5-flash',
       apiKey:
-          'AIzaSyAzwL_9gB9jeWZEn13l88MjhySTEj4Pa8M'); // Replace with your actual API key
+      'AIzaSyAzwL_9gB9jeWZEn13l88MjhySTEj4Pa8M'); // Replace with your actual API key
   DateTime now = DateTime.now().toUtc();
   DateTime selectedDate = DateTime.now().toUtc();
   TextEditingController description = TextEditingController();
@@ -142,7 +142,6 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
         : 'I wake up at 6:00 AM, attend church from 6:30 to 7:00 AM, and then eat breakfast at home. After that, I prepare for college and arrive at 9:00 AM. I return home at 5:30 PM, watch "My Hero Academia" on TV, study afterward, and go to sleep at 11:00 PM.';
 
     try {
-      print("Today's date is $formattedMonth");
       final response = await model.generateContent([
         Content.text(
             '$promptStart Today\'s date is $formattedMonth. $textDescription')
@@ -156,7 +155,6 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
       String jsonResponseText = response.text!;
       jsonResponseText = jsonResponseText.substring(
           jsonResponseText.indexOf('['), jsonResponseText.lastIndexOf(']') + 1);
-      print("Json Response Text: $jsonResponseText");
       jsonData = json.decode(jsonResponseText);
       setState(() {
         alwayschange();
@@ -198,90 +196,101 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
         builder: (BuildContext context) {
           return Container(
             margin:
-                const EdgeInsets.only(top: 50, bottom: 50, left: 30, right: 30),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.start,
+            const EdgeInsets.only(top: 50, bottom: 50, left: 30, right: 30),
+            child: ListView(
               children: [
-                TextField(
-                  controller: categroy,
-                  decoration: const InputDecoration(
-                    fillColor: Colors.white,
-                    filled: true,
-                    border: OutlineInputBorder(),
-                    labelText: "Enter Category",
-                  ),
-                ),
-                TextField(
-                  controller: title,
-                  decoration: const InputDecoration(
-                    fillColor: Colors.white,
-                    filled: true,
-                    border: OutlineInputBorder(),
-                    labelText: "Enter Title",
-                  ),
-                ),
-                TextField(
-                  controller: description,
-                  maxLines: 2,
-                  decoration: const InputDecoration(
-                    fillColor: Colors.white,
-                    border: OutlineInputBorder(),
-                    filled: true,
-                    labelText: "Enter Description",
-                  ),
-                ),
-                TextField(
-                  controller: startTimeController,
-                  onTap: () => changeStartTime(context),
-                  readOnly: true,
-                  decoration: const InputDecoration(
-                    floatingLabelBehavior: FloatingLabelBehavior.always,
-                    fillColor: Colors.white,
-                    border: OutlineInputBorder(),
-                    filled: true,
-                    labelText: "Enter Start Time",
-                  ),
-                ),
-                TextField(
-                  controller: endTimeController,
-                  onTap: () => changeEndTime(context),
-                  readOnly: true,
-                  decoration: const InputDecoration(
-                    floatingLabelBehavior: FloatingLabelBehavior.always,
-                    fillColor: Colors.white,
-                    border: OutlineInputBorder(),
-                    labelText: "Enter End Time",
-                    filled: true,
-                  ),
-                ),
-                ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        tasksForToday[index]['category'] = categroy.text;
-                        tasksForToday[index]['title'] = title.text;
-                        tasksForToday[index]['description'] = description.text;
-                        tasksForToday[index]['startTimeISO'] =
-                            convertTimeOfDayToDateTime(selectedDate, startTime)
-                                .toIso8601String();
-                        tasksForToday[index]['endTimeISO'] =
-                            convertTimeOfDayToDateTime(selectedDate, endTime)
-                                .toIso8601String();
-                      });
-                      Navigator.pop(context);
-                    },
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(7))),
-                    child: const Text(
-                      "Save",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontFamily: 'Bebas Neue',
-                        fontSize: 23,
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 10,),
+                    TextField(
+                      controller: categroy,
+                      decoration: const InputDecoration(
+                        fillColor: Colors.white,
+                        filled: true,
+                        border: OutlineInputBorder(),
+                        labelText: "Enter Category",
                       ),
-                    )),
+                    ),
+                    SizedBox(height: 20),
+                    TextField(
+                      controller: title,
+                      decoration: const InputDecoration(
+                        fillColor: Colors.white,
+                        filled: true,
+                        border: OutlineInputBorder(),
+                        labelText: "Enter Title",
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    TextField(
+                      controller: description,
+                      maxLines: 2,
+                      decoration: const InputDecoration(
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(),
+                        filled: true,
+                        labelText: "Enter Description",
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    TextField(
+                      controller: startTimeController,
+                      onTap: () => changeStartTime(context),
+                      readOnly: true,
+                      decoration: const InputDecoration(
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(),
+                        filled: true,
+                        labelText: "Enter Start Time",
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    TextField(
+                      controller: endTimeController,
+                      onTap: () => changeEndTime(context),
+                      readOnly: true,
+                      decoration: const InputDecoration(
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(),
+                        labelText: "Enter End Time",
+                        filled: true,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            tasksForToday[index]['category'] = categroy.text;
+                            tasksForToday[index]['title'] = title.text;
+                            tasksForToday[index]['description'] = description.text;
+                            tasksForToday[index]['startTimeISO'] =
+                                convertTimeOfDayToDateTime(selectedDate, startTime)
+                                    .toIso8601String();
+                            tasksForToday[index]['endTimeISO'] =
+                                convertTimeOfDayToDateTime(selectedDate, endTime)
+                                    .toIso8601String();
+                          });
+                          Navigator.pop(context);
+                        },
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(7))),
+                        child: const Text(
+                          "Save",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'Bebas Neue',
+                            fontSize: 23,
+                          ),
+                        )),
+                    SizedBox(height: 80),
+                  ],
+                )
               ],
             ),
           );
@@ -308,35 +317,20 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
 
       // Check if the start time is in the future
       if (startDateTime.isBefore(DateTime.now())) {
-        print("The start time ${startDateTime.toString()} is in the past. Skipping notification.");
         continue;
-      }
-
-      // Generate a unique ID based on the date and hour
-      String formattedDateHour = DateFormat('yyyyMMddHH').format(startDateTime);
-      int uniqueId;
-      try {
-        uniqueId = int.parse(formattedDateHour);
-        print(uniqueId);
-      } catch (e) {
-        // Handle the error if the string is not a valid integer
-        print("Error parsing unique ID: ${e.toString()}");
-        continue; // Skip this notification
       }
       AwesomeNotifications().isNotificationAllowed().then((perms) async {
         if(perms)
-          {
+        {
+          DatabaseService().getTasksForDate(DateFormat("dd MMMM yyyy").format(startDateTime)).map((t) async {
             await AwesomeNotifications().createNotification(
               content: NotificationContent(
-                  id: uniqueId,
-                  // Use the generated unique id
+                  id: t.id ?? 0,
                   channelKey: 'Task',
-                  title: "Task For Now ${task['title']}",
-                  body: "${task['description']} from ${DateFormat('hh:mm aa')
-                      .format(startDateTime)} to ${DateFormat('hh:mm aa').format(
-                      endDateTime)}",
+                  title: "Task For Now ${t.title}",
+                  body: "${t.description} from ${DateFormat('hh:mm aa').format(t.startTime)} to ${DateFormat('hh:mm aa').format(t.endTime)}",
                   wakeUpScreen: true,
-                  category: NotificationCategory.Email
+                  category: NotificationCategory.Reminder
               ),
               schedule: NotificationCalendar(
                 year: startDateTime.year,
@@ -349,7 +343,10 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
                 preciseAlarm: true,
               ),
             );
-          }
+            print(t.id);
+          }).toList();
+
+        }
       });
     }
   }
@@ -396,6 +393,15 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
                     _showError('Failed to generate response text');
                     return;
                   }
+                  await DatabaseService().getTasksForDate(DateFormat("dd MMMM yyyy").format(selectedDate)).map((task) {
+                    try {
+                      AwesomeNotifications().cancel(task.id ?? 0);
+                    } catch(e)
+                    {
+                      _showError("An Error Occurred With Notifications");
+                    }
+                  }).toList();
+
                   await DatabaseService().deleteAllTasksForDate(
                       DateFormat("dd MMMM yyyy").format(selectedDate));
                   for (var task in tasksForToday) {
@@ -459,7 +465,7 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
                           border: InputBorder.none,
                           filled: true,
                           hintText:
-                              'I wake up at 6:00 AM, attend church from 6:30 to 7:00 AM, and then eat breakfast at home. After that, I prepare for college and arrive at 9:00 AM. I return home at 5:30 PM, watch "My Hero Academia" on TV, study afterward, and go to sleep at 11:00 PM.',
+                          'I wake up at 6:00 AM, attend church from 6:30 to 7:00 AM, and then eat breakfast at home. After that, I prepare for college and arrive at 9:00 AM. I return home at 5:30 PM, watch "My Hero Academia" on TV, study afterward, and go to sleep at 11:00 PM.',
                         ),
                         maxLines: 8,
                       ),
@@ -530,52 +536,52 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
                       ),
                       isGenerate
                           ? Column(
-                              children:
-                                  tasksForToday.asMap().entries.map((entry) {
-                                int index = entry.key;
-                                var task = entry.value;
-                                return CreateTaskCard(
-                                  task: Task(
-                                    title: task['title'],
-                                    day: DateFormat("dd MMMM yyyy").format(
-                                        DateTime.parse(task['startTimeISO'])),
-                                    description: task['description'],
-                                    startTime:
-                                        DateTime.parse(task['startTimeISO']),
-                                    endTime: DateTime.parse(task['endTimeISO']),
-                                    category: task['category'],
-                                  ),
-                                  onDelete: () => deleteTask(index),
-                                  onEdit: () => editTask(
-                                    Task(
-                                      title: task['title'],
-                                      day: DateFormat("dd MMMM yyyy").format(
-                                          DateTime.parse(task['startTimeISO'])),
-                                      description: task['description'],
-                                      startTime:
-                                          DateTime.parse(task['startTimeISO']),
-                                      endTime:
-                                          DateTime.parse(task['endTimeISO']),
-                                      category: task['category'],
-                                    ),
-                                    index,
-                                  ),
-                                );
-                              }).toList(),
-                            )
-                          : const Column(
-                              children: [
-                                SizedBox(
-                                  height: 40,
-                                ),
-                                Center(
-                                  child: CircularProgressIndicator(
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                        Colors.black26),
-                                  ),
-                                )
-                              ],
+                        children:
+                        tasksForToday.asMap().entries.map((entry) {
+                          int index = entry.key;
+                          var task = entry.value;
+                          return CreateTaskCard(
+                            task: Task(
+                              title: task['title'],
+                              day: DateFormat("dd MMMM yyyy").format(
+                                  DateTime.parse(task['startTimeISO'])),
+                              description: task['description'],
+                              startTime:
+                              DateTime.parse(task['startTimeISO']),
+                              endTime: DateTime.parse(task['endTimeISO']),
+                              category: task['category'],
                             ),
+                            onDelete: () => deleteTask(index),
+                            onEdit: () => editTask(
+                              Task(
+                                title: task['title'],
+                                day: DateFormat("dd MMMM yyyy").format(
+                                    DateTime.parse(task['startTimeISO'])),
+                                description: task['description'],
+                                startTime:
+                                DateTime.parse(task['startTimeISO']),
+                                endTime:
+                                DateTime.parse(task['endTimeISO']),
+                                category: task['category'],
+                              ),
+                              index,
+                            ),
+                          );
+                        }).toList(),
+                      )
+                          : const Column(
+                        children: [
+                          SizedBox(
+                            height: 40,
+                          ),
+                          Center(
+                            child: CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                  Colors.black26),
+                            ),
+                          )
+                        ],
+                      ),
                     ],
                   ),
                 ),
