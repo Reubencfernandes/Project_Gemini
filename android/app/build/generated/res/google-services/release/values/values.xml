@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="default_web_client_id" translatable="false">1042783564992-nsj4rkcbm0kc2emcj7lcdqk7uo6h7ln0.apps.googleusercontent.com</string>
+    <string name="gcm_defaultSenderId" translatable="false">1042783564992</string>
+    <string name="google_api_key" translatable="false">AIzaSyCYkWxZww-wVN6DXmRUa4Rxsi7hU3JrZ9Q</string>
+    <string name="google_app_id" translatable="false">1:1042783564992:android:a472e86e1ce605ed62e925</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyCYkWxZww-wVN6DXmRUa4Rxsi7hU3JrZ9Q</string>
+    <string name="google_storage_bucket" translatable="false">daily-task-planner-935f5.appspot.com</string>
+    <string name="project_id" translatable="false">daily-task-planner-935f5</string>
+</resources>

@@ -199,89 +199,100 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
           return Container(
             margin:
                 const EdgeInsets.only(top: 50, bottom: 50, left: 30, right: 30),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: ListView(
               children: [
-                TextField(
-                  controller: categroy,
-                  decoration: const InputDecoration(
-                    fillColor: Colors.white,
-                    filled: true,
-                    border: OutlineInputBorder(),
-                    labelText: "Enter Category",
-                  ),
-                ),
-                TextField(
-                  controller: title,
-                  decoration: const InputDecoration(
-                    fillColor: Colors.white,
-                    filled: true,
-                    border: OutlineInputBorder(),
-                    labelText: "Enter Title",
-                  ),
-                ),
-                TextField(
-                  controller: description,
-                  maxLines: 2,
-                  decoration: const InputDecoration(
-                    fillColor: Colors.white,
-                    border: OutlineInputBorder(),
-                    filled: true,
-                    labelText: "Enter Description",
-                  ),
-                ),
-                TextField(
-                  controller: startTimeController,
-                  onTap: () => changeStartTime(context),
-                  readOnly: true,
-                  decoration: const InputDecoration(
-                    floatingLabelBehavior: FloatingLabelBehavior.always,
-                    fillColor: Colors.white,
-                    border: OutlineInputBorder(),
-                    filled: true,
-                    labelText: "Enter Start Time",
-                  ),
-                ),
-                TextField(
-                  controller: endTimeController,
-                  onTap: () => changeEndTime(context),
-                  readOnly: true,
-                  decoration: const InputDecoration(
-                    floatingLabelBehavior: FloatingLabelBehavior.always,
-                    fillColor: Colors.white,
-                    border: OutlineInputBorder(),
-                    labelText: "Enter End Time",
-                    filled: true,
-                  ),
-                ),
-                ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        tasksForToday[index]['category'] = categroy.text;
-                        tasksForToday[index]['title'] = title.text;
-                        tasksForToday[index]['description'] = description.text;
-                        tasksForToday[index]['startTimeISO'] =
-                            convertTimeOfDayToDateTime(selectedDate, startTime)
-                                .toIso8601String();
-                        tasksForToday[index]['endTimeISO'] =
-                            convertTimeOfDayToDateTime(selectedDate, endTime)
-                                .toIso8601String();
-                      });
-                      Navigator.pop(context);
-                    },
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(7))),
-                    child: const Text(
-                      "Save",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontFamily: 'Bebas Neue',
-                        fontSize: 23,
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 10,),
+                    TextField(
+                      controller: categroy,
+                      decoration: const InputDecoration(
+                        fillColor: Colors.white,
+                        filled: true,
+                        border: OutlineInputBorder(),
+                        labelText: "Enter Category",
                       ),
-                    )),
+                    ),
+                    SizedBox(height: 20),
+                    TextField(
+                      controller: title,
+                      decoration: const InputDecoration(
+                        fillColor: Colors.white,
+                        filled: true,
+                        border: OutlineInputBorder(),
+                        labelText: "Enter Title",
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    TextField(
+                      controller: description,
+                      maxLines: 2,
+                      decoration: const InputDecoration(
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(),
+                        filled: true,
+                        labelText: "Enter Description",
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    TextField(
+                      controller: startTimeController,
+                      onTap: () => changeStartTime(context),
+                      readOnly: true,
+                      decoration: const InputDecoration(
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(),
+                        filled: true,
+                        labelText: "Enter Start Time",
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    TextField(
+                      controller: endTimeController,
+                      onTap: () => changeEndTime(context),
+                      readOnly: true,
+                      decoration: const InputDecoration(
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(),
+                        labelText: "Enter End Time",
+                        filled: true,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            tasksForToday[index]['category'] = categroy.text;
+                            tasksForToday[index]['title'] = title.text;
+                            tasksForToday[index]['description'] = description.text;
+                            tasksForToday[index]['startTimeISO'] =
+                                convertTimeOfDayToDateTime(selectedDate, startTime)
+                                    .toIso8601String();
+                            tasksForToday[index]['endTimeISO'] =
+                                convertTimeOfDayToDateTime(selectedDate, endTime)
+                                    .toIso8601String();
+                          });
+                          Navigator.pop(context);
+                        },
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(7))),
+                        child: const Text(
+                          "Save",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'Bebas Neue',
+                            fontSize: 23,
+                          ),
+                        )),
+                    SizedBox(height: 80),
+                  ],
+                )
               ],
             ),
           );

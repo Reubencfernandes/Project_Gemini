@@ -4,7 +4,6 @@ import 'package:ayumi/pages/onboarding_page.dart';
 import 'package:ayumi/pages/register.dart';
 import 'package:ayumi/pages/tasks_page.dart';
 import 'package:ayumi/services/database_service.dart';
-import 'package:ayumi/services/notification_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';

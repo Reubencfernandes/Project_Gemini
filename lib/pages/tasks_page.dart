@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:ayumi/pages/components/tasks_for_date.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -10,6 +12,7 @@ class TasksPage extends StatefulWidget {
 }
 
 class _TasksPageState extends State<TasksPage> {
+  Timer? timer;
   late DateTime now = DateTime.now().toLocal();
   late String formattedTime = DateFormat('hh:mm a').format(now);
   late String formattedMonth = DateFormat('MMMM dd, yyyy').format(now);
@@ -18,8 +21,21 @@ class _TasksPageState extends State<TasksPage> {
   @override
   void initState() {
     super.initState();
+    timer = Timer.periodic(const Duration(minutes: 1), (t)
+    {
+     setState(() {
+       formattedTime = DateFormat('hh:mm a').format(DateTime.now().toLocal());
+     });
+    });
   }
 
+
+  @override
+  void dispose()
+  {
+    super.dispose();
+    timer?.cancel();
+  }
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
