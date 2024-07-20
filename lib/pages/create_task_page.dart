@@ -311,45 +311,38 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
   void scheduleNotifications(List<dynamic> tasksForToday) async {
     String localTimeZone = await AwesomeNotifications().getLocalTimeZoneIdentifier();
 
-    for (var task in tasksForToday) {
-      DateTime startDateTime = DateTime.parse(task['startTimeISO']).toLocal();
-      DateTime endDateTime = DateTime.parse(task['endTimeISO']).toLocal();
 
-      // Check if the start time is in the future
-      if (startDateTime.isBefore(DateTime.now())) {
-        continue;
-      }
-      AwesomeNotifications().isNotificationAllowed().then((perms) async {
-        if(perms)
-        {
-          DatabaseService().getTasksForDate(DateFormat("dd MMMM yyyy").format(startDateTime)).map((t) async {
-            await AwesomeNotifications().createNotification(
-              content: NotificationContent(
-                  id: t.id ?? 0,
-                  channelKey: 'Task',
-                  title: "Task For Now ${t.title}",
-                  body: "${t.description} from ${DateFormat('hh:mm aa').format(t.startTime)} to ${DateFormat('hh:mm aa').format(t.endTime)}",
-                  wakeUpScreen: true,
-                  category: NotificationCategory.Reminder
-              ),
-              schedule: NotificationCalendar(
-                year: startDateTime.year,
-                month: startDateTime.month,
-                day: startDateTime.day,
-                hour: startDateTime.hour,
-                minute: startDateTime.minute,
-                second: startDateTime.second,
-                timeZone: localTimeZone,
-                preciseAlarm: true,
-              ),
-            );
-            print(t.id);
-          }).toList();
 
-        }
-      });
+      if (await AwesomeNotifications().isNotificationAllowed()) {
+        List<Task> tasksForDate = await DatabaseService()
+            .getTasksForDate(DateFormat("dd MMMM yyyy").format(selectedDate))
+            .toList();
+
+        for (var t in tasksForDate) {
+          await AwesomeNotifications().createNotification(
+            content: NotificationContent(
+                id: t.id ?? 0,
+                channelKey: 'Task',
+                title: "Task For Now ${t.title}",
+                body:
+                "${t.description} from ${DateFormat('hh:mm aa').format(t.startTime)} to ${DateFormat('hh:mm aa').format(t.endTime)}",
+                wakeUpScreen: true,
+                category: NotificationCategory.Reminder),
+            schedule: NotificationCalendar(
+              year: t.startTime.year,
+              month: t.startTime.month,
+              day: t.startTime.day,
+              hour: t.startTime.hour,
+              minute: t.startTime.minute,
+              second: t.startTime.second,
+              timeZone: localTimeZone,
+              preciseAlarm: true,
+            ),
+          );
+          }
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Container(
