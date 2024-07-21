@@ -97,10 +97,11 @@ class _TasksPageState extends State<TasksPage> {
               ),
               ClipRRect(
                 borderRadius: BorderRadius.circular(50.0),
-                child: SizedBox(
-                    width: 50.0,
-                    height: 50.0,
-                    child: Image.asset('images/user.jpg')
+                child: Image.asset(
+                  "images/user.jpg",
+                  width: 50,
+                  height: 50,
+                  fit: BoxFit.cover,
                 ),
               ),
             ],

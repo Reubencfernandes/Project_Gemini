@@ -31,7 +31,7 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
   final model = GenerativeModel(
       model: 'gemini-1.5-flash',
       apiKey:
-      'AIzaSyAzwL_9gB9jeWZEn13l88MjhySTEj4Pa8M'); // Replace with your actual API key
+      'Key-You-want-Take-this'); // Replace with your actual API key
   DateTime now = DateTime.now().toUtc();
   DateTime selectedDate = DateTime.now().toUtc();
   TextEditingController description = TextEditingController();
@@ -327,7 +327,11 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
                 body:
                 "${t.description} from ${DateFormat('hh:mm aa').format(t.startTime)} to ${DateFormat('hh:mm aa').format(t.endTime)}",
                 wakeUpScreen: true,
-                category: NotificationCategory.Reminder),
+                category: NotificationCategory.Reminder,
+              showWhen: true,
+              displayOnBackground: true,
+              displayOnForeground: true,
+            ),
             schedule: NotificationCalendar(
               year: t.startTime.year,
               month: t.startTime.month,
@@ -338,6 +342,7 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
               timeZone: localTimeZone,
               preciseAlarm: true,
             ),
+
           );
           }
     }
@@ -346,11 +351,11 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(top: 50, left: 10, right: 10),
+      margin: const EdgeInsets.only(top: 60, left: 5, right: 5),
       child: Column(
         children: [
           Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.end,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               ElevatedButton(
@@ -363,6 +368,8 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.grey[300],
                   elevation: 0,
+                  shadowColor: Colors.transparent,
+                  overlayColor: Colors.transparent,
                 ),
                 child: const Text(
                   "Clear All",
@@ -421,9 +428,9 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.grey[300],
-                  shadowColor: Colors.grey[300],
+                  shadowColor: Colors.transparent,
                   elevation: 0,
-                  overlayColor: Colors.grey[300],
+                  overlayColor: Colors.transparent,
                 ),
                 child: const Text(
                   "Done",

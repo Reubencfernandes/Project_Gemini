@@ -73,19 +73,20 @@ class _CreateAccountState extends State<CreateAccount> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        margin: const EdgeInsets.only(top: 100, left: 20, right: 20),
+        margin: const EdgeInsets.only(top: 130, left: 20, right: 20),
         child: Column(
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Image.asset('images/logo.jpg',height: 50,
+                Image.asset('images/logo.jpg',height: 40,
                 ),
                 const SizedBox(width: 10,),
                 const Text(
                   "Create Your Account",
                   style: TextStyle(
-                      fontSize: 34,
+                      fontSize: 24,
                       fontFamily: "Bebas Neue",
                       ),
                 ),
@@ -93,7 +94,7 @@ class _CreateAccountState extends State<CreateAccount> {
             ),
             const SizedBox(height: 10),
             const Text(
-              "Fill in your details to create a new user account.",
+              "Fill in your details to create a user account.",
               style: TextStyle(
                   fontFamily: "Inter",
                   fontSize: 16,

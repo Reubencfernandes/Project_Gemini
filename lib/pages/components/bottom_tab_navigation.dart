@@ -20,18 +20,8 @@ class _NavigationBarState extends State<BottomTabNavigation> {
   ];
 
   void _onItemTapped(int index) {
-    Fetchnoti();
     setState(() {
       _selectedIndex = index;
-    });
-  }
-
-  Future<void> Fetchnoti() async {
-    List<NotificationModel> scheduledNotifications =
-        await AwesomeNotifications().listScheduledNotifications();
-
-    scheduledNotifications.forEach((notification) {
-      print('Scheduled Notification: ${notification.content?.title}');
     });
   }
 

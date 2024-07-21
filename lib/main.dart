@@ -16,7 +16,7 @@ void main() async {
   await DatabaseService().readUsers();
   await AwesomeNotifications().initialize(null, [
     NotificationChannel(channelKey: "Task", channelName: "task_planner", channelDescription: "Notification of Tasks", ledColor: Colors.redAccent)
-  ],debug: true);
+  ]);
   runApp(
     ChangeNotifierProvider(
       create: (context) => DatabaseService(),
