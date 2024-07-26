@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:ayumi/pages/create_task_page.dart';
 import 'package:ayumi/pages/home_page.dart';
@@ -27,7 +29,9 @@ class _NavigationBarState extends State<BottomTabNavigation> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return PopScope(
+      canPop: false,
+        child: Scaffold(
       backgroundColor: Colors.grey[300],
       body: _pageList[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
@@ -51,6 +55,6 @@ class _NavigationBarState extends State<BottomTabNavigation> {
           ),
         ],
       ),
-    );
+    ));
   }
 }

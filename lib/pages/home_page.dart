@@ -304,7 +304,8 @@ class WelcomeHeader extends StatefulWidget {
 }
 
 class _WelcomeHeaderState extends State<WelcomeHeader> {
-  Future<String> _fetchUserName() async {// Simulating a delay
+  Future<String> _fetchUserName() async {
+    await Future.delayed(const Duration(seconds: 1));
     return DatabaseService().users[0].name;
   }
 

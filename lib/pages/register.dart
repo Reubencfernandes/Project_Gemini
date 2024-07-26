@@ -16,9 +16,9 @@ class CreateAccount extends StatefulWidget {
 class _CreateAccountState extends State<CreateAccount> {
   bool isRegister = false;
   DateTime now = DateTime.now().toUtc();
-  DateTime selectedDate = DateTime.now().toUtc();
+  late DateTime selectedDate = DateTime(now.year-21, now.month, now.day);
   late DateTime lastDate = DateTime(now.year-100, now.month, now.day);
-  late String formattedMonth = DateFormat('MMMM dd, yyyy').format(selectedDate);
+  late String formattedMonth = DateFormat('MMMM dd yyyy').format(selectedDate);
   final TextEditingController nameController = TextEditingController();
 
   Future<void> _selectDate(BuildContext context) async {
@@ -39,7 +39,7 @@ class _CreateAccountState extends State<CreateAccount> {
     if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
-        formattedMonth = DateFormat('MMMM dd, yyyy').format(selectedDate);
+        formattedMonth = DateFormat('MMMM dd yyyy').format(selectedDate);
       });
     }
   }
@@ -121,7 +121,7 @@ class _CreateAccountState extends State<CreateAccount> {
                   maxLines: 1,
                 ),
                 const SizedBox(height: 20), // Add space between elements
-                const Text("Enter Your Birthday (Month,Date)"),
+                const Text("Enter Your Birthday"),
                 const SizedBox(height: 10), // Add space between elements
                 TextField(
                   onTap: () => _selectDate(context),

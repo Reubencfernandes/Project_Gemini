@@ -31,9 +31,9 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
   final model = GenerativeModel(
       model: 'gemini-1.5-flash',
       apiKey:
-      'Key-You-want-Take-this'); // Replace with your actual API key
-  DateTime now = DateTime.now().toUtc();
-  DateTime selectedDate = DateTime.now().toUtc();
+      'AIzaSyC-ZhzdwrMwkGFnw9bhOTWDxx6n8IxL7hA'); // Replace with your actual API key
+  DateTime now = DateTime.now().toLocal();
+  DateTime selectedDate = DateTime.now().toLocal();
   TextEditingController description = TextEditingController();
   List<dynamic> tasksForToday = [];
   TextEditingController startTimeController = TextEditingController();

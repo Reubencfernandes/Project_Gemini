@@ -1,4 +1,4 @@
-package com.example.ayumi
+package com.ayumi
 
 import io.flutter.embedding.android.FlutterActivity
 

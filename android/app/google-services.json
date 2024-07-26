@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:1042783564992:android:a472e86e1ce605ed62e925",
         "android_client_info": {
-          "package_name": "com.example.ayumi"
+          "package_name": "com.ayumi"
         }
       },
       "oauth_client": [
@@ -17,7 +17,7 @@
           "client_id": "1042783564992-fge9jg25q55ohig1laa69rg0d64cldqf.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.ayumi",
+            "package_name": "com.ayumi",
             "certificate_hash": "77c04b8d57280546c8230199e4e9967bc0931da4"
           }
         },
