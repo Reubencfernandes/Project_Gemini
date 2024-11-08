@@ -35,11 +35,11 @@ This project is a submission for the Google Gemini API Developer Competition. De
 
 We designed the UI using Figma, which is slightly different from the current app. You can view our design on Figma [here](https://www.figma.com/design/ULZ6BLy6zvHRYHiFLYgAwZ/Gemini-Hackathon?node-id=0-1&t=PNkbIF9mOmRm7nqL-1).
 
-![Image 1](https://play-lh.googleusercontent.com/l3_hM-H4pkEs6LGWUQlVszK1XECg-_YgnDYkQ8S-aBV2oDzm4l_ZaaHhZEHAwwUizHM=w2560-h1440-rw)
-
-
 ### Connect with Us
 
 - [Discord](https://discord.gg/v2TzrDz5Kz)
 - [LinkedIn - Reuben Fernandes](https://www.linkedin.com/in/reuben-fernandes-9a0347253/)
 - [LinkedIn - Delano Lourenco](https://www.linkedin.com/in/delano-lourenco-a9022a190/)
+
+![Image 1](https://play-lh.googleusercontent.com/l3_hM-H4pkEs6LGWUQlVszK1XECg-_YgnDYkQ8S-aBV2oDzm4l_ZaaHhZEHAwwUizHM=w2560-h1440-rw)
+
