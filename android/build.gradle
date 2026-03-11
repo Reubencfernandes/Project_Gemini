@@ -5,6 +5,17 @@ allprojects {
     }
 }
 
+// Fix namespace for older plugins (e.g. isar_flutter_libs) that don't set one
+subprojects {
+    afterEvaluate { project ->
+        if (project.plugins.hasPlugin("com.android.library") || project.plugins.hasPlugin("com.android.application")) {
+            if (!project.android.namespace) {
+                project.android.namespace = project.group ?: "com.placeholder.${project.name}"
+            }
+        }
+    }
+}
+
 rootProject.buildDir = "../build"
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"

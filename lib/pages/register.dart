@@ -52,9 +52,10 @@ class _CreateAccountState extends State<CreateAccount> {
 
   void Register(String hisName, String hisBirthday) {
     alwaysChange();
-    User newUser = User()
-      ..name = hisName.isNotEmpty ? hisName : 'User'
-      ..birthday = hisBirthday;
+    User newUser = User(
+      name: hisName.isNotEmpty ? hisName : 'User',
+      birthday: hisBirthday,
+    );
 
     DatabaseService().addUser(newUser);
     alwaysChange();

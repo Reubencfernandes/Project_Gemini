@@ -1,9 +1,8 @@
-import 'dart:io';
-
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:ayumi/entities/task.dart';
 import 'package:ayumi/pages/components/my_badge.dart';
 import 'package:ayumi/pages/onboarding_page.dart';
+import 'package:ayumi/services/api_key_service.dart';
 import 'package:ayumi/services/database_service.dart';
 import 'package:color_hash/color_hash.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +33,15 @@ class _HomePageState extends State<HomePage> {
                 builder: (context) {
                   return ListView(
                     children: [
-                      ...buildCurrentTask(),
+                      FutureBuilder<Task?>(
+                        future: DatabaseService().getCurrentTask(),
+                        builder: (context, snapshot) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: _buildCurrentTaskWidgets(snapshot.data),
+                          );
+                        },
+                      ),
                       const SizedBox(height: 30),
                       FutureBuilder<List<Widget>>(
                         future: buildAnalysisOfTasks(),
@@ -67,8 +74,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  List<Widget> buildCurrentTask() {
-    Task? currentTask = DatabaseService().getCurrentTask();
+  List<Widget> _buildCurrentTaskWidgets(Task? currentTask) {
     double progressPercent = 0.0;
     if (currentTask != null) {
       progressPercent = 100 *
@@ -373,6 +379,7 @@ class _WelcomeHeaderState extends State<WelcomeHeader> {
                             Navigator.of(context).pop();
                             await DatabaseService().wipeEverything();
                             await AwesomeNotifications().cancelAll();
+                            await ApiKeyService.removeApiKey();
                             Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => OnboardingPage()));
                           },
                           child: const Text('OK',style: TextStyle(color: Colors.blue),),

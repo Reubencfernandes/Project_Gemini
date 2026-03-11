@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:ayumi/entities/task.dart';
+import 'package:ayumi/services/api_key_service.dart';
 import 'package:ayumi/services/database_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animated_button/flutter_animated_button.dart';
@@ -28,10 +29,7 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
   late TimeOfDay startTime;
   late TimeOfDay endTime;
   List<dynamic> jsonData = [];
-  final model = GenerativeModel(
-      model: 'gemini-1.5-flash',
-      apiKey:
-      'AIzaSyC-ZhzdwrMwkGFnw9bhOTWDxx6n8IxL7hA'); // Replace with your actual API key
+  GenerativeModel? _model;
   DateTime now = DateTime.now().toLocal();
   DateTime selectedDate = DateTime.now().toLocal();
   TextEditingController description = TextEditingController();
@@ -136,13 +134,21 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
   }
 
   Future<void> _generateTasks() async {
+    final apiKey = await ApiKeyService.getApiKey();
+    if (apiKey == null || apiKey.isEmpty) {
+      _showError('Please set your Gemini API key in Settings first');
+      return;
+    }
+
+    _model = GenerativeModel(model: 'gemini-1.5-flash', apiKey: apiKey);
+
     alwayschange();
     String textDescription = description.text.isNotEmpty
         ? description.text
         : 'I wake up at 6:00 AM, attend church from 6:30 to 7:00 AM, and then eat breakfast at home. After that, I prepare for college and arrive at 9:00 AM. I return home at 5:30 PM, watch "My Hero Academia" on TV, study afterward, and go to sleep at 11:00 PM.';
 
     try {
-      final response = await model.generateContent([
+      final response = await _model!.generateContent([
         Content.text(
             '$promptStart Today\'s date is $formattedMonth. $textDescription')
       ]);
@@ -315,8 +321,7 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
 
       if (await AwesomeNotifications().isNotificationAllowed()) {
         List<Task> tasksForDate = await DatabaseService()
-            .getTasksForDate(DateFormat("dd MMMM yyyy").format(selectedDate))
-            .toList();
+            .getTasksForDate(DateFormat("dd MMMM yyyy").format(selectedDate));
 
         for (var t in tasksForDate) {
           await AwesomeNotifications().createNotification(
@@ -393,14 +398,14 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
                     _showError('Failed to generate response text');
                     return;
                   }
-                  await DatabaseService().getTasksForDate(DateFormat("dd MMMM yyyy").format(selectedDate)).map((task) {
+                  final existingTasks = await DatabaseService().getTasksForDate(DateFormat("dd MMMM yyyy").format(selectedDate));
+                  for (final task in existingTasks) {
                     try {
                       AwesomeNotifications().cancel(task.id ?? 0);
-                    } catch(e)
-                    {
+                    } catch (e) {
                       _showError("An Error Occurred With Notifications");
                     }
-                  }).toList();
+                  }
 
                   await DatabaseService().deleteAllTasksForDate(
                       DateFormat("dd MMMM yyyy").format(selectedDate));

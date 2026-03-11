@@ -1,8 +1,6 @@
-import 'dart:io';
-
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:ayumi/pages/create_task_page.dart';
 import 'package:ayumi/pages/home_page.dart';
+import 'package:ayumi/pages/settings_page.dart';
 import 'package:ayumi/pages/tasks_page.dart';
 import 'package:flutter/material.dart';
 
@@ -18,7 +16,8 @@ class _NavigationBarState extends State<BottomTabNavigation> {
   final List<Widget> _pageList = [
     const HomePage(),
     const CreateTaskPage(),
-    const TasksPage()
+    const TasksPage(),
+    const SettingsPage(),
   ];
 
   void _onItemTapped(int index) {
@@ -52,6 +51,10 @@ class _NavigationBarState extends State<BottomTabNavigation> {
           BottomNavigationBarItem(
             icon: Icon(Icons.list),
             label: 'Tasks',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Settings',
           ),
         ],
       ),
